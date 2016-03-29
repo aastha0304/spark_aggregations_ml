@@ -2,13 +2,13 @@
 Repository for zeo Hack Lab, where data is the ring and we are Bilbo Baggins, precious! 
 
 This project aims to accomplish what zHL aims to accomplish, which includes all this
-There's a stream of bidrequests from some users coming from a non-zeotap ssp.
-There's a stream of bidrequests for same users coming from zeotap ssp. Zeotap adds users' segment information to this stream. This means, users' gender, age, income group.
-For privacy sake and for preventing identification, zeotap anonymises certain bid attributes. 
-Everybody wants this rich user information for which they pay zeotap some money, but they dont want to pay that money.
-So somebody might try to fingerprint zeotap's bidstream and use that to match against bidstream from non-zeotap ssp.
-If they are successful, they have user segment information from zeotap and also unique attributes from other ssps; so they know more about the user than the users' mother.
-We don't want that to happen.
+- There's a stream of bidrequests from some users coming from a non-zeotap ssp.
+- There's a stream of bidrequests for same users coming from zeotap ssp. Zeotap adds users' segment information to this stream. This means, users' gender, age, income group.
+- For privacy sake and for preventing identification, zeotap anonymises certain bid attributes. 
+- Everybody wants this rich user information for which they pay zeotap some money, but they dont want to pay that money.
+- So somebody might try to fingerprint zeotap's bidstream and use that to match against bidstream from non-zeotap ssp.
+- If they are successful, they have user segment information from zeotap and also unique attributes from other ssps; so they know more about the user than the users' mother.
+- We don't want that to happen.
 
 So first of all, prove, is it really possible to match these 2?
 Yes :(
@@ -76,17 +76,17 @@ Why do you think similarity value will work, instead of actual attribute value f
 If we create a sparse vector based on categories, it won't solve the problem of feature relevance of column, it will solve for that value of the column. So we don't make n-1 encoding or anything.
 
 You are not smart enough to pull this of. Who helped you?
-this guy, 
+this-  guy, 
 http://blog.kaggle.com/2015/09/16/icdm-winners-interview-3rd-place-roberto-diaz/
 is trying to solve a similar problem
-https://www.kaggle.com/c/icdm-2015-drawbridge-cross-device-connections
-Also, the book Programming Collective Intelligence, is pretty good. The matchmaker chapter helped with logic for logit
-Wikipedia is the best source for understanding logit
+- https://www.kaggle.com/c/icdm-2015-drawbridge-cross-device-connections
+- Also, the book Programming Collective Intelligence, is pretty good. The matchmaker chapter helped with logic for logit.
+- Wikipedia is the best source for understanding logit
 https://en.wikipedia.org/wiki/Logistic_regression
-Or, Andrew NG
-Coding help came from 
-https://spark.apache.org/docs/latest/ml-classification-regression.html
-http://spark.apache.org/docs/latest/mllib-linear-methods.html
+- Or, Andrew NG
+- Coding help came from 
+- https://spark.apache.org/docs/latest/ml-classification-regression.html
+- http://spark.apache.org/docs/latest/mllib-linear-methods.html
 
 
 
