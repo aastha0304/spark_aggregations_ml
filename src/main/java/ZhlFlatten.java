@@ -85,7 +85,7 @@ public class ZhlFlatten {
     final LogisticRegressionModel model = new LogisticRegressionWithLBFGS()
     	      .setNumClasses(2)
     	      .run(training.rdd());
-    model.clearThreshold();
+//    model.clearThreshold();
  // Compute raw scores on the test set.
     JavaRDD<Tuple2<Object, Object>> scoreAndLabels = test.map(
       new Function<LabeledPoint, Tuple2<Object, Object>>() {

@@ -345,7 +345,7 @@ class GetVectorScores implements
 						secondIdx = idx;
 					}
 				}
-				if(first>0.65 && second<0.5){
+				if(first>0.65 && ((first-second)<0.25)){
 					CombinedValues combiOb = new CombinedValues();
 					cOb = firstOb;
 					combiOb.calSim(mOb, cOb);
