@@ -202,12 +202,13 @@ public class RequestHandle{
 		key.add(bidOb.getTs());
 		
 		String ip = bidOb.getIp();
-		String ip1="", ip2="";
+		String ip1="", ip2="", ip3 = "";
 		if(!ip.isEmpty()){
 			String[] ips = ip.split("\\.");
 			if(ips.length==4){
 				ip1 = ips[0];
 				ip2 = ips[1];
+				ip3 = ips[2];
 			}else{
 				System.out.println(ip);
 				System.out.println(ips.length);
@@ -216,8 +217,9 @@ public class RequestHandle{
 		}
 		key.add(ip1);
 		key.add(ip2);
+		key.add(ip3);
 		String city = bidOb.getCity();
-		if(city.isEmpty())
+		if(city == null || city.isEmpty())
 			city = "";
 		key.add(city);
 		String region = bidOb.getRegion();
