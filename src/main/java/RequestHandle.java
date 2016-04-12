@@ -218,14 +218,14 @@ public class RequestHandle{
 		key.add(ip1);
 		key.add(ip2);
 		key.add(ip3);
-		String city = bidOb.getCity();
-		if(city == null || city.isEmpty())
-			city = "";
-		key.add(city);
-		String region = bidOb.getRegion();
-		if(region.isEmpty())
-			region="";
-		key.add(region);
+//		String city = bidOb.getCity();
+//		if(city == null || city.isEmpty())
+//			city = "";
+//		key.add(city);
+//		String region = bidOb.getRegion();
+//		if(region.isEmpty())
+//			region="";
+//		key.add(region);
 		return key;
 	}
 }
