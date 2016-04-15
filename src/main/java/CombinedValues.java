@@ -1,10 +1,12 @@
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.List;
 
-import org.apache.spark.api.java.function.FlatMapFunction;
-import org.apache.spark.api.java.function.PairFlatMapFunction;
+import org.apache.spark.api.java.function.*;
 import org.apache.spark.mllib.linalg.Vectors;
 import org.apache.spark.mllib.regression.LabeledPoint;
 
@@ -140,13 +142,13 @@ public class CombinedValues {
 							if (ips1[3].equals(ips1[3])) {
 								return 1;
 							}
-							return 1 >> 8;
+							return 1;
 						}
-						return 1 >> 16;
+						return 1 >> 8;
 					}
-					return 1 >> 24;
+					return 1 >> 16;
 				}
-				return 1 >> 32;
+				return 1 >> 24;
 			}
 		}
 		return 0;
@@ -221,38 +223,36 @@ public class CombinedValues {
 		this.regionSim = typeStrSim(mr.getRegion(), cr.getRegion());
 		this.timeSim = timeTypeSim(mr.getTs(), cr.getTs());
 		this.ipSim = ipTypeSim(mr.getIp(), cr.getIp());
-		this.badvSim = 0.0f;
-		// this.badvSim = strSim(mr.getBadv(), cr.getBadv());
+		this.badvSim = strSim(mr.getBadv(), cr.getBadv());
 		// this.totalSim += this.badvSim;
-		this.bcatSim = 0.0f;
-		// this.bcatSim = strSim(mr.getBcat(), cr.getBcat());
+		this.bcatSim = strSim(mr.getBcat(), cr.getBcat());
 		// this.totalSim += this.bcatSim;
 		this.displaymgrSim = strSim(mr.getDisplaymanager(), cr.getDisplaymanager());
-		this.totalSim += this.displaymgrSim;
+		//this.totalSim += this.displaymgrSim;
 		this.bannerapiSim = strSim(mr.getBanner_api(), cr.getBanner_api());
 		this.totalSim += this.bannerapiSim;
 		this.bannerattrSim = strSim(mr.getBanner_battr(), cr.getBanner_battr());
 		this.totalSim += this.bannerattrSim;
 		this.displaymgrverSim = strSim(mr.getDisplaymanagerver(), cr.getDisplaymanagerver());
-		this.totalSim += this.displaymgrverSim;
+		//this.totalSim += this.displaymgrverSim;
 		this.appcatSim = strSim(mr.getApp_cat(), cr.getApp_cat());
-		this.totalSim += this.appcatSim;
+		//this.totalSim += this.appcatSim;
 		this.appverSim = strSim(mr.getApp_ver(), cr.getApp_ver());
-		this.totalSim += this.appverSim;
+		//this.totalSim += this.appverSim;
 		this.uaSim = strSim(mr.getUa(), cr.getUa());
-		this.totalSim += this.uaSim;
+		//this.totalSim += this.uaSim;
 		this.appdomainSim = strSim(mr.getApp_domain(), cr.getApp_domain());
-		this.totalSim += this.appdomainSim;
+		//this.totalSim += this.appdomainSim;
 		this.dlangSim = typeStrSim(mr.getDevice_lang(), cr.getDevice_lang());
-		this.totalSim += this.dlangSim;
+		//this.totalSim += this.dlangSim;
 		this.carrierSim = strSim(mr.getCarrier(), cr.getCarrier());
-		this.totalSim += this.carrierSim;
+		//this.totalSim += this.carrierSim;
 
 		this.bidfloorSim = bidSim(mr.getBidfloor(), cr.getBidfloor());
-		this.totalSim += this.bidfloorSim;
+		//this.totalSim += this.bidfloorSim;
 
 		this.latSim = geoSim(mr.getLat(), mr.getLon(), cr.getLat(), cr.getLon());
-		this.totalSim += this.latSim;
+		//this.totalSim += this.latSim;
 
 		this.instlSim = boolSim(mr.getInstl(), cr.getInstl());
 		this.totalSim += this.instlSim;
@@ -266,20 +266,20 @@ public class CombinedValues {
 		this.totalSim += this.bannertfSim;
 
 		this.dtypeSim = typeSim(mr.getDevicetype(), cr.getDevicetype());
-		this.totalSim += this.dtypeSim;
+		//this.totalSim += this.dtypeSim;
 		this.bannerwSim = typeSim(mr.getBanner_w(), cr.getBanner_w());
 		this.totalSim += this.bannerwSim;
 		this.bannerhSim = typeSim(mr.getBanner_h(), cr.getBanner_h());
 		this.totalSim += this.bannerhSim;
 		this.ctypeSim = typeSim(mr.getConnectiontype(), cr.getConnectiontype());
-		this.totalSim += this.ctypeSim;
+		//this.totalSim += this.ctypeSim;
 		this.bannerposSim = typeSim(mr.getBanner_pos(), cr.getBanner_pos());
 		this.totalSim += this.bannerposSim;
 
 		this.tmaxSim = intSim(mr.getTmax(), cr.getTmax());
-		this.totalSim += this.tmaxSim;
+		//this.totalSim += this.tmaxSim;
 
-		totalSim = totalSim / 23;
+		//totalSim = totalSim / 21;
 	}
 
 	void calSimWithoutBadvBcatAndMore(ModifiedRow mr, CommonRow cr) {
@@ -357,28 +357,42 @@ public class CombinedValues {
 }
 
 class GetCombinedValues implements
-		PairFlatMapFunction<Tuple2<ArrayList<ModifiedRow>, ArrayList<CommonRow>>, ModifiedRow, ArrayList<Tuple2<CommonRow, Float>>> {
+		PairFlatMapFunction<Tuple2<ArrayList<ModifiedRow>, ArrayList<CommonRow>>, String, Tuple2<String, Float>> {
 	@Override
-	public Iterable<Tuple2<ModifiedRow, ArrayList<Tuple2<CommonRow, Float>>>> call(
+	public Iterable<Tuple2<String, Tuple2<String, Float>>> call(
 			Tuple2<ArrayList<ModifiedRow>, ArrayList<CommonRow>> joined) {
 		ArrayList<ModifiedRow> m = joined._1;
 		ArrayList<CommonRow> o = joined._2;
 
-		List<Tuple2<ModifiedRow, ArrayList<Tuple2<CommonRow, Float>>>> results = new ArrayList<>();
+		List<Tuple2<String, Tuple2<String, Float>>> results = new ArrayList<>();
 
 		for (ModifiedRow mOb : m) {
-			ArrayList<Tuple2<CommonRow, Float>> mList = new ArrayList<>();
 			for (CommonRow cOb : o) {
 				CombinedValues combiOb = new CombinedValues();
-				combiOb.calSim(mOb, cOb);
-				mList.add(new Tuple2(cOb, combiOb.totalSim));
+				combiOb.calSimWithoutBadvBcat(mOb, cOb);
+				results.add(new Tuple2(mOb.getO_id(), new Tuple2(cOb.getId(), combiOb.totalSim)));
 			}
-			results.add(new Tuple2(mOb, mList));
 		}
 		return results;
 	}
 }
 
+//class FlattenPairs implements Function<Tuple2<String, Map<String, Float>>, String> {
+//	@Override
+//	public Iterable<String> call(Tuple2<String, Map<String, Float>> scoreMap){
+//		List<String>  result = new ArrayList<>();
+//		Iterator it = scoreMap._2.entrySet().iterator();
+//		String tid = scoreMap._1;
+//		
+//	    while (it.hasNext()) {
+//	        Map.Entry pair = (Map.Entry)it.next();
+//	        result.add(new StringBuffer().append(tid).append(',').append(pair.getKey()).append(',').append(pair.getValue()).toString());
+//	        System.out.println(pair.getKey() + " = " + pair.getValue());
+//	        it.remove(); // avoids a ConcurrentModificationException
+//	    }
+//	    return result;
+//	}
+//}
 class GetCombinedScores implements
 		PairFlatMapFunction<Tuple2<ArrayList<ModifiedRow>, ArrayList<CommonRow>>, ModifiedRow, Tuple2<CommonRow, Integer>> {
 	@Override
@@ -1480,5 +1494,41 @@ class GetVectorScoresWithStringsWithoutBadvBcatFor1_1MapsCheck1_1Maps
 			}
 		}
 		return results;
+	}
+}
+
+class InitHash implements Function<Tuple2<String, Float>, Map<String, Float>>{
+	@Override
+	public Map<String, Float> call(Tuple2<String, Float> cr){
+		Map<String, Float> crList = new HashMap<>();
+		crList.put(cr._1,  cr._2);
+		return crList;
+	}
+}
+class AddInHash implements Function2<Map<String, Float>, Tuple2<String, Float>, Map<String, Float>>{
+	@Override
+	public Map<String, Float> call(Map<String, Float> scoreMap, Tuple2<String, Float> cr ){
+		float currentSim = cr._2;
+		String currentId = cr._1;
+		if(scoreMap.get(currentId) == null || (float)scoreMap.get(currentId)<currentSim)
+			scoreMap.put(currentId, currentSim);
+		return scoreMap;	
+	}
+}
+class AddPartHash implements Function2<Map<String, Float>, Map<String, Float>, Map<String, Float>>{
+	@Override
+	public Map<String, Float> call(Map<String, Float> crList1, Map<String, Float> crList2){
+			Map<String, Float> result = new HashMap<>();
+			result.putAll(crList1);
+			Iterator it = crList2.entrySet().iterator();
+			while (it.hasNext()) {
+		        Map.Entry pair = (Map.Entry)it.next();
+		        if( (result.get(pair.getKey())==null) || (float) result.get(pair.getKey()) < (float) pair.getValue() ){
+		        		result.put((String) pair.getKey(), (float) pair.getValue());
+		        }	
+		        //System.out.println(pair.getKey() + " = " + pair.getValue());
+		        it.remove(); // avoids a ConcurrentModificationException
+		    }
+		return result;
 	}
 }

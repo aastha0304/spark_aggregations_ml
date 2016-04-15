@@ -1,5 +1,8 @@
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
+
 import scala.Tuple2;
 import org.apache.spark.api.java.function.*;
 
@@ -113,14 +116,14 @@ class InitList implements Function<CommonRow, ArrayList<CommonRow>>{
 		return crList;
 	}
 }
-class AddInPart implements Function2<ArrayList<CommonRow>, CommonRow, ArrayList<CommonRow>>{
+class AddInList implements Function2<ArrayList<CommonRow>, CommonRow, ArrayList<CommonRow>>{
 	@Override
 	public ArrayList<CommonRow> call(ArrayList<CommonRow> crList, CommonRow cr ){
 		crList.add(cr);
 		return crList;
 	}
 }
-class AddAccPart implements Function2<ArrayList<CommonRow>, ArrayList<CommonRow>, ArrayList<CommonRow>>{
+class AddInListPart implements Function2<ArrayList<CommonRow>, ArrayList<CommonRow>, ArrayList<CommonRow>>{
 	@Override
 	public ArrayList<CommonRow> call(ArrayList<CommonRow> crList1, ArrayList<CommonRow> crList2){
 		crList1.addAll(crList2);

@@ -115,14 +115,14 @@ class InitMList implements Function<ModifiedRow, ArrayList<ModifiedRow>>{
 		return crList;
 	}
 }
-class AddInMPart implements Function2<ArrayList<ModifiedRow>, ModifiedRow, ArrayList<ModifiedRow>>{
+class AddInMList implements Function2<ArrayList<ModifiedRow>, ModifiedRow, ArrayList<ModifiedRow>>{
 	@Override
 	public ArrayList<ModifiedRow> call(ArrayList<ModifiedRow> crList, ModifiedRow cr ){
 		crList.add(cr);
 		return crList;
 	}
 }
-class AddAccMPart implements Function2<ArrayList<ModifiedRow>, ArrayList<ModifiedRow>, ArrayList<ModifiedRow>>{
+class AddInMListPart implements Function2<ArrayList<ModifiedRow>, ArrayList<ModifiedRow>, ArrayList<ModifiedRow>>{
 	@Override
 	public ArrayList<ModifiedRow> call(ArrayList<ModifiedRow> crList1, ArrayList<ModifiedRow> crList2){
 		crList1.addAll(crList2);

@@ -1,5 +1,7 @@
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.apache.spark.SparkConf;
@@ -13,6 +15,8 @@ import org.apache.spark.mllib.evaluation.BinaryClassificationMetrics;
 import org.apache.spark.mllib.regression.LabeledPoint;
 
 import scala.Tuple2;
+import org.apache.spark.api.java.function.FlatMapFunction;
+
 
 /***
  * 
@@ -24,8 +28,8 @@ public class ZhlFlatten {
 	static Logger logger = Logger.getLogger(ZhlFlatten.class.getName());
 
 	public static void main(String[] args) {
-		if (args.length < 5) {
-			System.out.println("1 - modified path, 2 - original path, 3 o/p path modifed, 4 o/p path original");
+		if (args.length < 3) {
+			System.out.println("1 - modified path, 2 - original path, 3 labels");
 			System.exit(-1);
 		}
 		String logMFile = args[0]; // Should be some file on your system
@@ -34,18 +38,18 @@ public class ZhlFlatten {
 		JavaSparkContext sc = new JavaSparkContext(conf);
 
 		JavaPairRDD<KeyClass, ArrayList<ModifiedRow>> mLines = sc.textFile(logMFile, 300)
-				.mapToPair(new GetModifiedRow()).combineByKey(new InitMList(), new AddInMPart(), new AddAccMPart());
+				.mapToPair(new GetModifiedRow()).combineByKey(new InitMList(), new AddInMList(), new AddInMListPart());
 		JavaPairRDD<KeyClass, ArrayList<CommonRow>> oLines = sc.textFile(logOFile, 600)
-				.filter(new Function<String, Boolean>() {
-					@Override
-					public Boolean call(String s) throws Exception {
-						if ((!(s.contains("displaymanager")) || s.contains("\"displaymanager\":\"mopub\""))
-								&& (s.contains("\"carrier\":\"T-Mobile\"") || s.contains("\"carrier\":\"T-Mobile USA\"")
-										|| s.contains("\"carrier\":\"310-260\"")))
-							return true;
-						return false;
-					}
-				}).mapToPair(new GetCommonRow()).combineByKey(new InitList(), new AddInPart(), new AddAccPart());
+//				.filter(new Function<String, Boolean>() {
+//					@Override
+//					public Boolean call(String s) throws Exception {
+//						if (s.contains("\"carrier\":\"T-Mobile\"") || s.contains("\"carrier\":\"T-Mobile USA\"")
+//										|| s.contains("\"carrier\":\"310-260\""))
+//							return true;
+//						return false;
+//					}
+//				})
+				.mapToPair(new GetCommonRow()).combineByKey(new InitList(), new AddInList(), new AddInListPart());
 
 		// JavaPairRDD<ModifiedRow, ArrayList<Tuple2<CommonRow, Float>>> cLines
 		// = mLines
@@ -56,54 +60,91 @@ public class ZhlFlatten {
 		// .join(oLines).values().distinct().flatMapToPair(new
 		// GetCombinedScores()).cache();
 
-		JavaRDD<Tuple2<ArrayList<ModifiedRow>, ArrayList<CommonRow>>> tupleData = mLines.join(oLines).values()
-				.distinct();
-		JavaRDD<LabeledPoint> data = tupleData.flatMap(new GetVectorScoresWithoutBadvBcatCheck1_1Maps()).cache();
-		JavaRDD<String> actualMatchStrings = tupleData.flatMap(new GetVectorScoresWithStringsWithoutBadvBcatCheck1_1Maps());
-		JavaRDD<String> actualMatchStringsFor1_1Maps = tupleData
-				.flatMap(new GetVectorScoresWithStringsWithoutBadvBcatFor1_1MapsCheck1_1Maps());
-
-		tupleData.saveAsTextFile(args[6]);
-		System.out.println("###### LENGTH : " + tupleData.count());
-
-		actualMatchStringsFor1_1Maps.saveAsTextFile(args[7]);
-		actualMatchStrings.saveAsTextFile(args[5]);
-		// //mLines.saveAsTextFile(args[2]);
-		// //oLines.saveAsTextFile(args[3]);
-		// cLines.saveAsTextFile(args[2]);
-		// scored.saveAsTextFile(args[3]);
-		data.saveAsTextFile(args[4]);
-		// System.out.println(mLines.count());
-		// System.out.println(oLines.count());
-		// System.out.println(cLines.count());
-		// System.out.println(scored.count());
-		System.out.println("########### DATA COUNT : " + data.count());
-		JavaRDD<LabeledPoint>[] splits = data.randomSplit(new double[] { 0.6, 0.4 }, 11L);
-		JavaRDD<LabeledPoint> training = splits[0].cache();
-		List<LabeledPoint> results = training.take(10);
-		for (LabeledPoint lp : results) {
-			System.out.println(lp.toString());
-		}
-		JavaRDD<LabeledPoint> test = splits[1];
-		results = test.take(10);
-		for (LabeledPoint lp : results) {
-			System.out.println(lp.toString());
-		}
-		final LogisticRegressionModel model = new LogisticRegressionWithLBFGS().setNumClasses(2).run(training.rdd());
-		// model.clearThreshold();
-		// Compute raw scores on the test set.
-		JavaRDD<Tuple2<Object, Object>> scoreAndLabels = test.map(new Function<LabeledPoint, Tuple2<Object, Object>>() {
-			public Tuple2<Object, Object> call(LabeledPoint p) {
-				Double score = model.predict(p.features());
-				return new Tuple2<Object, Object>(score, p.label());
-			}
-		});
-
-		// Get evaluation metrics.
-		BinaryClassificationMetrics metrics = new BinaryClassificationMetrics(JavaRDD.toRDD(scoreAndLabels));
-		double auROC = metrics.areaUnderROC();
-		System.out.println(model.weights());
-		System.out.println("Area under ROC = " + auROC);
+		//JavaRDD<Tuple2<ArrayList<ModifiedRow>, ArrayList<CommonRow>>> tupleData = mLines.join(oLines).values().cache();
+		//tupleData.saveAsTextFile(args[2]);
+		
+		//JavaPairRDD<String, Map<String, Float>> scoredSets = mLines.join(oLines).values().flatMapToPair(new GetCombinedValues());
+		//scoredSets.saveAsTextFile(args[3]);
+				
+		JavaRDD<String> flatSets = mLines.join(oLines).values()
+				.flatMapToPair(new GetCombinedValues())
+				.combineByKey(new InitHash(), new AddInHash(), new AddPartHash())
+			    .flatMap(new FlatMapFunction<Tuple2<String, Map<String, Float>>, String>() {
+					@Override
+					public Iterable<String> call(Tuple2<String, Map<String, Float>> scoreMap){
+						List<String>  result = new ArrayList<>();
+						Iterator it = scoreMap._2.entrySet().iterator();
+						String tid = scoreMap._1;
+						float max = 0;
+						int idx = -1;
+						String maxKey = "";
+						int c = -1;
+						while (it.hasNext()) { 
+							c+= 1;
+					        Map.Entry pair = (Map.Entry)it.next();
+					        result.add(tid+','+pair.getKey()+','+'0'); 
+					        float currentSim = (float)pair.getValue();
+					        if(currentSim>max){
+					        		max = currentSim;
+					        		maxKey = (String) pair.getKey();
+					        		idx = c;
+					        }
+					        it.remove(); // avoids a ConcurrentModificationException
+					    }
+						result.set(idx, tid+','+maxKey+','+'1');
+					    return result;
+					}
+				});	
+		flatSets.saveAsTextFile(args[2]);
+		
+		
+		//JavaPairRDD<String, Map<String, Float>> sims = flatSets.combineByKey(new InitSet(), new AddInSet(), new AddAccSet()).flatMapToPair(new LabelPairs());
+		
+//		JavaRDD<LabeledPoint> data = tupleData.flatMap(new GetVectorScoresWithoutBadvBcatCheck1_1Maps()).cache();
+//		JavaRDD<String> actualMatchStrings = tupleData.flatMap(new GetVectorScoresWithStringsWithoutBadvBcatCheck1_1Maps());
+//		JavaRDD<String> actualMatchStringsFor1_1Maps = tupleData
+//				.flatMap(new GetVectorScoresWithStringsWithoutBadvBcatFor1_1MapsCheck1_1Maps());
+//
+//		System.out.println("###### LENGTH : " + tupleData.count());
+//
+//		actualMatchStringsFor1_1Maps.saveAsTextFile(args[7]);
+//		actualMatchStrings.saveAsTextFile(args[5]);
+//		// //mLines.saveAsTextFile(args[2]);
+//		// //oLines.saveAsTextFile(args[3]);
+//		// cLines.saveAsTextFile(args[2]);
+//		// scored.saveAsTextFile(args[3]);
+//		data.saveAsTextFile(args[4]);
+//		// System.out.println(mLines.count());
+//		// System.out.println(oLines.count());
+//		// System.out.println(cLines.count());
+//		// System.out.println(scored.count());
+//		System.out.println("########### DATA COUNT : " + data.count());
+//		JavaRDD<LabeledPoint>[] splits = data.randomSplit(new double[] { 0.6, 0.4 }, 11L);
+//		JavaRDD<LabeledPoint> training = splits[0].cache();
+//		List<LabeledPoint> results = training.take(10);
+//		for (LabeledPoint lp : results) {
+//			System.out.println(lp.toString());
+//		}
+//		JavaRDD<LabeledPoint> test = splits[1];
+//		results = test.take(10);
+//		for (LabeledPoint lp : results) {
+//			System.out.println(lp.toString());
+//		}
+//		final LogisticRegressionModel model = new LogisticRegressionWithLBFGS().setNumClasses(2).run(training.rdd());
+//		// model.clearThreshold();
+//		// Compute raw scores on the test set.
+//		JavaRDD<Tuple2<Object, Object>> scoreAndLabels = test.map(new Function<LabeledPoint, Tuple2<Object, Object>>() {
+//			public Tuple2<Object, Object> call(LabeledPoint p) {
+//				Double score = model.predict(p.features());
+//				return new Tuple2<Object, Object>(score, p.label());
+//			}
+//		});
+//
+//		// Get evaluation metrics.
+//		BinaryClassificationMetrics metrics = new BinaryClassificationMetrics(JavaRDD.toRDD(scoreAndLabels));
+//		double auROC = metrics.areaUnderROC();
+//		System.out.println(model.weights());
+//		System.out.println("Area under ROC = " + auROC);
 		sc.stop();
 	}
 }
