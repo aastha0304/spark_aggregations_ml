@@ -25,6 +25,39 @@ public class RequestHandle{
 		}
 		return job;
 	}
+	static ArrayList<String> getArrString(JSONObject job, String key){
+		ArrayList<String> val = new ArrayList<>();
+		try{
+			JSONArray value = (JSONArray) job.get(key);
+			int len = value.size();
+			if(len > 0){
+				for(int i=0; i < len; i++){
+                    val.add(String.valueOf(value.get(i)));
+				}
+			}
+		}catch(Exception e){
+			logger.info(job.toString()+" "+key);
+			logger.info(e.getMessage());
+		}
+		return val;
+	}
+	static ArrayList<Integer> getArrInt(JSONObject job, String key){
+		ArrayList<Integer> val = new ArrayList<>();
+		try{
+			JSONArray value = (JSONArray) job.get(key);
+			
+			int len = value.size();
+			if(len > 0){
+				 for(int i=0; i < len; i++){
+                     val.add(Integer.parseInt(value.get(i).toString()));
+             }
+			}
+		}catch(Exception e){
+			logger.info(job.toString()+" "+key);
+			logger.info(e.getMessage());
+		}
+		return val;
+	}
 	static String getArrStr(JSONObject job, String key){
 		StringBuffer sbf = new StringBuffer();
 		String val = "";
@@ -84,6 +117,16 @@ public class RequestHandle{
 		}
 		return (val!=null)?val.toLowerCase():val;
 	}
+	static String getGenderString(JSONObject job, String key){
+		String val = new String("z");
+		try {
+			val = (String)job.get(key);
+		}catch(Exception e){
+			logger.info(job.toString()+" "+key);
+			logger.info(e.getMessage());
+		}
+		return (val!=null)?val.toLowerCase():val;
+	}
 	static int getInt(JSONObject job, String key){
 		int val=-1;
 		try {
@@ -95,29 +138,69 @@ public class RequestHandle{
 		return val;
 	}
 	static BidAttributes getCommonRow(String req){
+		ArrayList<String> app_cat = new ArrayList<>();
+		String app_domain = "";
+		String app_ver = "";
+
+		ArrayList<String> badv = new ArrayList<>();
+		ArrayList<Integer> banner_api = new ArrayList<>();
+		ArrayList<Integer> banner_battr = new ArrayList<>();
+		int banner_h = -1;
+		int banner_pos = -1;
+		char banner_topframe = '-'; //
+		int banner_w = -1;
+		ArrayList<String> bcat = new ArrayList<>();
+		float bidfloor = -1;
 		
-		String id, badv, bcat, displaymanager, banner_api, banner_battr, displaymanagerver, app_ver, 
-		  app_cat, ua, ip, city, region, carrier, app_domain, device_lang;
-		id = badv = bcat = displaymanager = banner_api = banner_battr = displaymanagerver = app_ver = 
-				  app_cat = ua = ip = city = region = carrier = app_domain = device_lang = "";
-		float bidfloor, lat, lon ;
-		bidfloor = lat = lon = -1;
-		int banner_pos, banner_w, banner_h, connectiontype, devicetype, tmax;
-		banner_pos = banner_w = banner_h = connectiontype = devicetype = tmax  = -1;
-		char instl, dnt, device_lmt, imp_secure, banner_topframe;
-		instl = dnt = device_lmt = imp_secure = banner_topframe = '-';
+		String carrier = "";
+		String city= "";
+		int connectiontype = -1;
+		
+		String device_lang = "";
+		char device_lmt = '-'; //
+		int devicetype = -1;
+		String displaymanager = "";
+		String displaymanagerver = "";
+		char dnt = '-';
+		
+		char extra_atts = '0';
+		
+		String id = "";
+		char imp_secure = '-'; //
+		int imp_size = -1;
+		char instl= '-';
+		String ip = "";
+		
+		float lat = -1;
+		float lon = -1;
+		
+		String region = "";
+		String ua = "";
+		
+		String zip = "";
+		
+		int banner_hmax = -1;
+		int banner_hmin = -1;
+		int banner_wmax = -1;
+		int banner_wmin = -1;
+		int device_h = -1;
+		int device_w = -1;
+		int user_ext_cokkie_age = -1;
+		String user_gender = "z";
+		String user_keywords = "";
+		 int user_yob = -1;
+		
 		
 		JSONObject br = new JSONObject();
 			br = create(req);
 			  JSONObject user = getJson(br,  "user");
 			  if(user != null){
 				  id = getString(user, "id");
-				  badv = getArrStr(br, "badv");
-				  bcat = getArrStr(br, "bcat");
-				  //at = getInt(br, "at");
-				  tmax = getInt(br, "tmax");
+				 
+				  badv = getArrString(br, "badv");
+				  bcat = getArrString(br, "bcat");
+				  imp_size = getJsonArr(br, "imp").size();
 				  JSONObject imp = (JSONObject)getJsonArr(br, "imp").get(0);
-				  //JSONObject imp = (JSONObject)getJson(br, "imp").get(0);
 				  if(imp != null){
 					  bidfloor = getDouble(imp, "bidfloor");
 					  displaymanager = getString(imp, "displaymanager");
@@ -127,18 +210,30 @@ public class RequestHandle{
 					  if(banner != null){
 						  banner_pos = getInt(banner, "pos");
 						  banner_w = getInt(banner, "w");
-						  //banner_btype = getArrStr(banner, "btype");
 						  banner_h = getInt(banner, "h");
-						  banner_api = getArrStr(banner, "api");
-						  banner_battr = getArrStr(banner, "battr");
+						  banner_api = getArrInt(banner, "api");
+						  banner_battr = getArrInt(banner, "battr");
 						  banner_topframe = (char)(getInt(banner, "topframe")+'0');
+						  //for extra_atts
+						  banner_hmax = getInt(banner, "hmax");
+						  if(banner_hmax != -1)
+							  extra_atts = '1';
+						  banner_hmin = getInt(banner, "hmin");
+						  if(banner_hmin != -1)
+							  extra_atts = '1';
+						  banner_wmax = getInt(banner, "wmax");
+						  if(banner_wmax != -1)
+							  extra_atts = '1';
+						  banner_wmin = getInt(banner, "wmin");
+						  if(banner_wmin != -1)
+							  extra_atts = '1';
 					  }
 					  displaymanagerver = getString(imp, "displaymanagerver");
 				  }
 				  JSONObject app = getJson(br, "app");
 				  if(app != null){
 					  app_ver = getString(app, "ver");
-					  app_cat = getArrStr(app, "cat");
+					  app_cat = getArrString(app, "cat");
 					  app_domain = getString(app, "domain");
 				  }
 				  JSONObject device = getJson(br, "device");
@@ -147,9 +242,18 @@ public class RequestHandle{
 					  ip = getString(device, "ip");
 					  device_lang = getString(device, "language");
 					  device_lmt = (char)(getInt(device, "lmt")+'0');
+					  //for extra_atts
+					  device_h = getInt(device, "h");
+					  if(device_h!=-1){
+						  extra_atts = '1';
+					  }
+					  device_w = getInt(device, "w");
+					  if(device_w!=-1){
+						  extra_atts = '1';
+					  }
 					  JSONObject geo = getJson(device, "geo");
 					  if(geo != null){
-						  //zip = getString(geo, "zip");
+						  zip = getString(geo, "zip");
 						  lat = getDouble(geo, "lat");
 						  lon = getDouble(geo, "lon");
 						  city = getString(geo, "city");
@@ -162,6 +266,24 @@ public class RequestHandle{
 					  devicetype = getInt(device, "devicetype");
 					  dnt = (char)(getInt(device, "dnt")+'0');
 				  }	
+				  //for extra_atts
+				  JSONObject ext = getJson(user, "ext");
+				  if(ext != null){
+					  Object cookie_age = ext.get("cookie_age");
+					  if(cookie_age != null){
+						  user_ext_cokkie_age = (int)(long)cookie_age;
+						  extra_atts = '1';
+					  }
+				  }
+				  user_gender = getGenderString(user, "gender");
+				  if(user_gender != "z")
+					  extra_atts = '1';
+				  user_yob = getInt(user, "yob");
+				  if(user_yob != -1)
+					  extra_atts = '1';
+				  user_keywords = getString(user, "keywords");
+				  if(user_keywords != "")
+					  extra_atts = '1';
 			  }
 	      
 		 BidAttributes bidOb = new BidAttributes();
@@ -186,7 +308,6 @@ public class RequestHandle{
 		 bidOb.setDisplaymanager(displaymanager);
 		 bidOb.setDisplaymanagerver(displaymanagerver);
 		 bidOb.setUa(ua);
-		 bidOb.setTmax(tmax);
 		 bidOb.setRegion(region);
 		 bidOb.setLon(lon);
 		 bidOb.setLat(lat);
@@ -195,6 +316,20 @@ public class RequestHandle{
 		 bidOb.setImp_secure(imp_secure);
 		 bidOb.setId(id);
 		 bidOb.setDnt(dnt);
+		 if(extra_atts == '1'){
+			 ExtraAttributes extra = new ExtraAttributes();
+			 extra.setBanner_hmax(banner_hmax);
+			 extra.setBanner_hmin(banner_hmin);
+			 extra.setBanner_wmax(banner_wmax);
+			 extra.setBanner_wmin(banner_wmin);
+			 extra.setDevice_h(device_h);
+			 extra.setDevice_w(device_w);
+			 extra.setUser_ext_cokkie_age(user_ext_cokkie_age);
+			 extra.setUser_gender(user_gender);
+			 extra.setUser_keywords(user_keywords);
+			 extra.setUser_yob(user_yob);
+			 bidOb.setExtra(extra);
+		 }
 	      return bidOb;
 	}
 	static ArrayList<String> buildKey(CommonRow bidOb){
@@ -222,10 +357,12 @@ public class RequestHandle{
 //		if(city == null || city.isEmpty())
 //			city = "";
 //		key.add(city);
-//		String region = bidOb.getRegion();
-//		if(region.isEmpty())
-//			region="";
-//		key.add(region);
+		String region = bidOb.getRegion();
+		if(region.isEmpty())
+			region="";
+		key.add(region);
+		char extra_atts = bidOb.getExtra_atts();
+		key.add(extra_atts+"");
 		return key;
 	}
 }

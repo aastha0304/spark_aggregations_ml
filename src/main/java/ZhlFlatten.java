@@ -1,6 +1,7 @@
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
@@ -80,21 +81,30 @@ public class ZhlFlatten {
 						String maxKey = "";
 						int c = -1;
 						while (it.hasNext()) { 
-							c+= 1;
 					        Map.Entry pair = (Map.Entry)it.next();
-					        result.add(tid+','+pair.getKey()+','+'0'); 
+					        //result.add(tid+','+pair.getKey()+','+pair.getValue()+','+'0'); 
 					        float currentSim = (float)pair.getValue();
 					        if(currentSim>max){
 					        		max = currentSim;
-					        		maxKey = (String) pair.getKey();
-					        		idx = c;
 					        }
-					        it.remove(); // avoids a ConcurrentModificationException
+					        //it.remove(); // avoids a ConcurrentModificationException
 					    }
-						result.set(idx, tid+','+maxKey+','+'1');
+						Iterator add = scoreMap._2.entrySet().iterator();
+						while (add.hasNext()) { 
+							
+					        Map.Entry pair = (Map.Entry)add.next();
+					        //result.add(tid+','+pair.getKey()+','+pair.getValue()+','+'0'); 
+					        float currentSim = (float)pair.getValue();
+					        //System.out.println(pair.getKey().toString()+','+currentSim+','+max);
+					        if(currentSim-max==0){
+					        		result.add(tid+','+pair.getKey()+','+pair.getValue());
+					        }
+					        add.remove(); // avoids a ConcurrentModificationException
+					    }
+						
 					    return result;
 					}
-				});	
+				});
 		flatSets.saveAsTextFile(args[2]);
 		
 		

@@ -35,7 +35,7 @@ public class CommonRow extends BidAttributes implements Serializable{
 		.append('\t').append(this.getConnectiontype())
 		.append('\t').append(this.getDevicetype()).append('\t').append(this.getDnt()).append('\t')
 		.append(this.getDevice_lmt())
-		.append('\t').append(this.getImp_secure()).append('\t').append(this.getTmax()).append('\t')
+		.append('\t').append(this.getImp_secure()).append('\t')
 		.append(this.getBanner_topframe()).append('\t').append(this.getTs());
 		return sbf.toString();
 	}
@@ -88,7 +88,6 @@ class GetCommonRow implements PairFunction<String, KeyClass, CommonRow>{
 				 bidOb.setDisplaymanager(crob.getDisplaymanager());
 				 bidOb.setDisplaymanagerver(crob.getDisplaymanagerver());
 				 bidOb.setUa(crob.getUa());
-				 bidOb.setTmax(crob.getTmax());
 				 bidOb.setRegion(crob.getRegion());
 				 bidOb.setLon(crob.getLon());
 				 bidOb.setLat(crob.getLat());
@@ -97,6 +96,8 @@ class GetCommonRow implements PairFunction<String, KeyClass, CommonRow>{
 				 bidOb.setImp_secure(crob.getImp_secure());
 				 bidOb.setId(crob.getId());
 				 bidOb.setDnt(crob.getDnt());
+				 bidOb.setExtra(crob.getExtra());
+				 bidOb.setExtra_atts(crob.getExtra_atts());
 				 bidOb.setTs(ts);
 			KeyClass kOb = new KeyClass();
 			kOb.setS(RequestHandle.buildKey(bidOb));
