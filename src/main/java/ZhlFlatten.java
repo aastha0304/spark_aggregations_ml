@@ -67,7 +67,7 @@ public class ZhlFlatten {
 		//JavaPairRDD<String, Map<String, Float>> scoredSets = mLines.join(oLines).values().flatMapToPair(new GetCombinedValues());
 		//scoredSets.saveAsTextFile(args[3]);
 				
-		JavaRDD<String> flatSets = mLines.join(oLines).values()
+		JavaRDD<String>  flatSets = mLines.join(oLines).values()
 				.flatMapToPair(new GetCombinedValues())
 				.combineByKey(new InitHash(), new AddInHash(), new AddPartHash())
 			    .flatMap(new FlatMapFunction<Tuple2<String, Map<String, Float>>, String>() {
@@ -105,6 +105,8 @@ public class ZhlFlatten {
 					    return result;
 					}
 				});
+		 mLines.unpersist();
+			oLines.unpersist();
 		flatSets.saveAsTextFile(args[2]);
 		
 		

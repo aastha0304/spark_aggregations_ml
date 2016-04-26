@@ -12,7 +12,8 @@ import org.apache.spark.mllib.linalg.Vectors;
 import org.apache.spark.mllib.regression.LabeledPoint;
 
 import scala.Tuple2;
-
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.collections.CollectionUtils;
 class AddInHash implements Function2<Map<String, Float>, Tuple2<String, Float>, Map<String, Float>>{
 	@Override
 	public Map<String, Float> call(Map<String, Float> scoreMap, Tuple2<String, Float> cr ){
@@ -92,7 +93,7 @@ public class CombinedValues {
 	private float zip_sim;
 	float appVerSim(String mver, String over){
 		//default
-		   if((mver == null && over == null) || (mver.isEmpty() && over.isEmpty()))
+		   if(StringUtils.isEmpty(mver) && StringUtils.isEmpty(over))
 			   return 0;
 		   //non default
 		   if(over != null && mver !=null && !over.isEmpty() && !mver.isEmpty() && over.startsWith(mver))
@@ -101,7 +102,7 @@ public class CombinedValues {
 	   }
 	float arrSim(ArrayList outer, ArrayList inner){
 		//default
-		   if((outer == null && inner == null) || (outer.isEmpty() && inner.isEmpty()))
+		   if(CollectionUtils.isEmpty(outer) && CollectionUtils.isEmpty(inner))
 			   return 0;
 		 //non default
 		   else if (outer !=null && inner != null && !outer.isEmpty() && !inner.isEmpty() && outer.containsAll(inner))
@@ -212,11 +213,21 @@ public class CombinedValues {
 			this.totalSim += this.extra_sim;
 			this.totalSim = this.totalSim/31;
 		}else if(this.extra_atts_sim  == 0)
-			totalSim = totalSim / 21;
+			this.totalSim = this.totalSim / 21;
+		else{
+			this.totalSim += this.extra_atts_sim;
+			this.totalSim = this.totalSim/32;
+		}
 	}
 
 	float genderSim(String mr_gen, String or_gen){
 		//both default
+		if(StringUtils.isEmpty(mr_gen) && StringUtils.isEmpty(or_gen))
+			return 0;
+		if(StringUtils.isEmpty(mr_gen) && !StringUtils.isEmpty(or_gen))
+			return -1;
+		if(!StringUtils.isEmpty(mr_gen) && StringUtils.isEmpty(or_gen))
+			return -1;
 		if(mr_gen.equals("z") && or_gen.equals("z"))
 			return 0;
 		//both non default
@@ -252,7 +263,7 @@ public class CombinedValues {
 	}
 
 	float ipTypeSim(String ip1, String ip2) {
-		if (!ip1.isEmpty() && !ip2.isEmpty()) {
+		if (!StringUtils.isEmpty(ip1) && !StringUtils.isEmpty(ip2)) {
 			String[] ips1 = ip1.split("\\.");
 			String[] ips2 = ip1.split("\\.");
 			if (ips1.length == 4 && ips2.length == 4) {
@@ -278,7 +289,7 @@ public class CombinedValues {
 
 	float strSim(String s1, String s2) {
 		//both default
-		if((s1==null && s2==null) || (s1.isEmpty() && s2.isEmpty()))
+		if(StringUtils.isEmpty(s1) && StringUtils.isEmpty(s2))
 			return 0;
 		//both non default,  levenshtein
 		if (s1 != null && s2 != null && !s1.isEmpty() && !s2.isEmpty()) {
@@ -328,10 +339,10 @@ public class CombinedValues {
 }
 	float typeStrSim(String s1, String s2) {
 		//both non default
-		if (s1 != null && s2 != null && !s1.isEmpty() && s1.equals(s2))
+		if (s1 != null && s2 != null && !s1.isEmpty() && !s2.isEmpty() && s1.equals(s2))
 			return 1;
 		//default
-		else if((s1==null && s2==null) || (s1.isEmpty() && s2.isEmpty()))
+		else if(StringUtils.isEmpty(s1) && StringUtils.isEmpty(s2))
 			return 0;
 		return -1;
 	}

@@ -9,6 +9,11 @@
 		<jdk.version>1.7</jdk.version>
   </properties>
   <dependencies>
+    <dependency>
+	<groupId>commons-collections</groupId>
+	<artifactId>commons-collections</artifactId>
+	<version>3.2.1</version>
+</dependency>
     <dependency> <!-- Spark dependency -->
       <groupId>org.apache.spark</groupId>
       <artifactId>spark-core_2.11</artifactId>
