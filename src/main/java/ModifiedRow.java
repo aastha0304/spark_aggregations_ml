@@ -59,7 +59,7 @@ class GetModifiedRow implements PairFunction<String, KeyClass, ModifiedRow> {
 	  public Tuple2<KeyClass, ModifiedRow> call(String s) { 
 		  String[] line_arr = s.split("\t");
 		  
-		  if(line_arr.length==3){
+		  if(line_arr.length==4){
 			  String ts = line_arr[0].trim();
 			  String bidrequest = line_arr[1].trim();
 			  String orig_id = line_arr[2].trim();

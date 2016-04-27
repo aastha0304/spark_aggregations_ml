@@ -62,7 +62,7 @@ public class CommonRow extends BidAttributes implements Serializable{
 class GetCommonRow implements PairFunction<String, KeyClass, CommonRow>{
 	public Tuple2<KeyClass, CommonRow> call(String s){
 		String[] line_arr = s.split("\t");
-		if(line_arr.length==2){
+		if(line_arr.length==3){
 			String ts = line_arr[0].trim();
 			String bidrequest = line_arr[1].trim();
 			BidAttributes crob = RequestHandle.getCommonRow(bidrequest);
