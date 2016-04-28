@@ -378,16 +378,8 @@ class GetCombinedValues implements
 		for (ModifiedRow mOb : m) {
 			for (CommonRow cOb : o) {
 				CombinedValues combiOb = new CombinedValues();
-				try{
-					Date d1 = new Date((long) (mOb.getSmallTs()*1000));
-					Date d2 = new Date((long) (cOb.getSmallTs()*1000));
-					if(Math.abs( d1.getTime()- d2.getTime()) <=300){
-						combiOb.calSim(mOb, cOb);
-						results.add(new Tuple2(mOb.getO_id(), new Tuple2(cOb.getId(), combiOb.totalSim)));
-					}
-				}catch(Exception e){
-					e.printStackTrace();
-				}
+				combiOb.calSim(mOb, cOb);
+				results.add(new Tuple2(mOb.getO_id(), new Tuple2(cOb.getId(), combiOb.totalSim)));
 				
 				
 			}
