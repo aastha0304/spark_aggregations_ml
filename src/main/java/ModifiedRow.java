@@ -63,6 +63,7 @@ class GetModifiedRow implements PairFunction<String, KeyClass, ModifiedRow> {
 			  String ts = line_arr[0].trim();
 			  String bidrequest = line_arr[1].trim();
 			  String orig_id = line_arr[2].trim();
+			  double smallTs = Double.valueOf(line_arr[3].trim());
 			  BidAttributes crob = RequestHandle.getCommonRow(bidrequest);
 		  	  ModifiedRow bidOb = new ModifiedRow();
 				 bidOb.setApp_cat(crob.getApp_cat());
@@ -96,6 +97,7 @@ class GetModifiedRow implements PairFunction<String, KeyClass, ModifiedRow> {
 				 bidOb.setId(crob.getId());
 				 bidOb.setDnt(crob.getDnt());
 				 bidOb.setTs(ts);
+				 bidOb.setSmallTs(smallTs);
 				 bidOb.setO_id(orig_id.toLowerCase());
 				 bidOb.setExtra(crob.getExtra());
 				 bidOb.setExtra_atts(crob.getExtra_atts());

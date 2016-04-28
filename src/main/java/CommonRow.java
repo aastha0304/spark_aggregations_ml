@@ -8,8 +8,15 @@ import org.apache.spark.api.java.function.*;
 
 public class CommonRow extends BidAttributes implements Serializable{
 	private String ts;
+	private double smallTs;
 	public String getTs() {
 		return ts;
+	}
+	public double getSmallTs() {
+		return smallTs;
+	}
+	public void setSmallTs(double smallTs) {
+		this.smallTs = smallTs;
 	}
 	public void setTs(String ts) {
 		this.ts = ts;
@@ -36,7 +43,8 @@ public class CommonRow extends BidAttributes implements Serializable{
 		.append('\t').append(this.getDevicetype()).append('\t').append(this.getDnt()).append('\t')
 		.append(this.getDevice_lmt())
 		.append('\t').append(this.getImp_secure()).append('\t')
-		.append(this.getBanner_topframe()).append('\t').append(this.getTs());
+		.append(this.getBanner_topframe()).append('\t').append(this.getTs())
+		.append('\t').append(this.getSmallTs());
 		return sbf.toString();
 	}
 	@Override
@@ -65,6 +73,7 @@ class GetCommonRow implements PairFunction<String, KeyClass, CommonRow>{
 		if(line_arr.length==3){
 			String ts = line_arr[0].trim();
 			String bidrequest = line_arr[1].trim();
+			double smallTs = Double.valueOf(line_arr[2].trim());
 			BidAttributes crob = RequestHandle.getCommonRow(bidrequest);
 			CommonRow bidOb = new CommonRow();
 				 bidOb.setApp_cat(crob.getApp_cat());
@@ -99,6 +108,7 @@ class GetCommonRow implements PairFunction<String, KeyClass, CommonRow>{
 				 bidOb.setExtra(crob.getExtra());
 				 bidOb.setExtra_atts(crob.getExtra_atts());
 				 bidOb.setTs(ts);
+				 bidOb.setSmallTs(smallTs);
 			KeyClass kOb = new KeyClass();
 			kOb.setS(RequestHandle.buildKey(bidOb));
 			return new Tuple2(kOb, bidOb)	;	

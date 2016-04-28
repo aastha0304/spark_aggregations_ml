@@ -3,6 +3,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.apache.spark.SparkConf;
@@ -36,11 +37,14 @@ public class ZhlFlatten {
 		String logMFile = args[0]; // Should be some file on your system
 		String logOFile = args[1]; // Should be some file on your system
 		SparkConf conf = new SparkConf().setAppName("ZHL").set("spark.rdd.compress", "true");
+		conf.set("spark.serializer","org.apache.spark.serializer.KryoSerializer");
+		conf.set("spark.kryo.registrator","MyKryoRegistrator");
+		
 		JavaSparkContext sc = new JavaSparkContext(conf);
 
-		JavaPairRDD<KeyClass, ArrayList<ModifiedRow>> mLines = sc.textFile(logMFile, 300)
+		JavaPairRDD<KeyClass, ArrayList<ModifiedRow>> mLines = sc.textFile(logMFile)
 				.mapToPair(new GetModifiedRow()).combineByKey(new InitMList(), new AddInMList(), new AddInMListPart());
-		JavaPairRDD<KeyClass, ArrayList<CommonRow>> oLines = sc.textFile(logOFile, 600)
+		JavaPairRDD<KeyClass, ArrayList<CommonRow>> oLines = sc.textFile(logOFile)
 //				.filter(new Function<String, Boolean>() {
 //					@Override
 //					public Boolean call(String s) throws Exception {
@@ -67,15 +71,23 @@ public class ZhlFlatten {
 		//JavaPairRDD<String, Map<String, Float>> scoredSets = mLines.join(oLines).values().flatMapToPair(new GetCombinedValues());
 		//scoredSets.saveAsTextFile(args[3]);
 				
-		JavaRDD<String>  flatSets = mLines.join(oLines).values()
+		mLines.join(oLines).values()
 				.flatMapToPair(new GetCombinedValues())
 				.combineByKey(new InitHash(), new AddInHash(), new AddPartHash())
 			    .flatMap(new FlatMapFunction<Tuple2<String, Map<String, Float>>, String>() {
 					@Override
 					public Iterable<String> call(Tuple2<String, Map<String, Float>> scoreMap){
 						List<String>  result = new ArrayList<>();
-						Iterator it = scoreMap._2.entrySet().iterator();
 						String tid = scoreMap._1;
+						Set<Map.Entry<String, Float>>   es = scoreMap._2.entrySet();
+						Iterator it = es.iterator();
+						if(es.size()==1){
+							
+							result.add(tid+','+((Map.Entry)it.next()).getKey()+','+'1');
+							return result;
+						}
+						
+						
 						float max = 0;
 						int idx = -1;
 						String maxKey = "";
@@ -104,10 +116,8 @@ public class ZhlFlatten {
 						
 					    return result;
 					}
-				});
-		 mLines.unpersist();
-			oLines.unpersist();
-		flatSets.saveAsTextFile(args[2]);
+				}).saveAsTextFile(args[2]);
+		 
 		
 		
 		//JavaPairRDD<String, Map<String, Float>> sims = flatSets.combineByKey(new InitSet(), new AddInSet(), new AddAccSet()).flatMapToPair(new LabelPairs());

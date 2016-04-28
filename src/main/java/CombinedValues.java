@@ -85,6 +85,8 @@ public class CombinedValues {
 	
 	private float region_sim;
 	
+	private float small_ts_sim;
+	
 	private float time_sim;
 	
 	float totalSim;
@@ -190,6 +192,9 @@ public class CombinedValues {
 		this.ip_sim = ipTypeSim(mr.getIp(), cr.getIp());
 
 		this.region_sim = typeStrSim(mr.getRegion(), cr.getRegion());
+		
+		this.small_ts_sim = smalltimeTypeSim(mr.getSmallTs(), cr.getSmallTs());
+		//this.totalSim += this.small_ts_sim;
 		
 		this.time_sim = timeTypeSim(mr.getTs(), cr.getTs());
 		 
@@ -313,6 +318,18 @@ public class CombinedValues {
 		}
 		return -1;
 	}
+	float smalltimeTypeSim(double ts1, double ts2){
+		try{
+			Date d1 = new Date((long) (ts1*1000));
+			Date d2 = new Date((long) (ts2*1000));
+			if(Math.abs( d1.getTime()- d2.getTime()) <=0.3){
+				return 1;
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		return 0;
+	}
    float timeTypeSim(String ts1, String ts2) {
 	SimpleDateFormat format = new SimpleDateFormat("yyyy-mm-dd HH:mm:ss");
 	Date d1 = null;
@@ -361,8 +378,18 @@ class GetCombinedValues implements
 		for (ModifiedRow mOb : m) {
 			for (CommonRow cOb : o) {
 				CombinedValues combiOb = new CombinedValues();
-				combiOb.calSim(mOb, cOb);
-				results.add(new Tuple2(mOb.getO_id(), new Tuple2(cOb.getId(), combiOb.totalSim)));
+				try{
+					Date d1 = new Date((long) (mOb.getSmallTs()*1000));
+					Date d2 = new Date((long) (cOb.getSmallTs()*1000));
+					if(Math.abs( d1.getTime()- d2.getTime()) <=300){
+						combiOb.calSim(mOb, cOb);
+						results.add(new Tuple2(mOb.getO_id(), new Tuple2(cOb.getId(), combiOb.totalSim)));
+					}
+				}catch(Exception e){
+					e.printStackTrace();
+				}
+				
+				
 			}
 		}
 		return results;
