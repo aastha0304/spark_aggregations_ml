@@ -92,16 +92,18 @@ public class ZhlFlatten {
 						int idx = -1;
 						String maxKey = "";
 						int c = -1;
+						//finding max
 						while (it.hasNext()) { 
 					        Map.Entry pair = (Map.Entry)it.next();
-					        //result.add(tid+','+pair.getKey()+','+pair.getValue()+','+'0'); 
 					        float currentSim = (float)pair.getValue();
 					        if(currentSim>max){
 					        		max = currentSim;
 					        }
-					        //it.remove(); // avoids a ConcurrentModificationException
 					    }
 						Iterator add = scoreMap._2.entrySet().iterator();
+						int count_of_max = 0;
+						String oid = new String();
+						//finding how many have a max
 						while (add.hasNext()) { 
 							
 					        Map.Entry pair = (Map.Entry)add.next();
@@ -109,10 +111,19 @@ public class ZhlFlatten {
 					        float currentSim = (float)pair.getValue();
 					        //System.out.println(pair.getKey().toString()+','+currentSim+','+max);
 					        if(currentSim-max==0){
-					        		result.add(tid+','+pair.getKey()+','+pair.getValue());
+					        		count_of_max++;
+					        		if(count_of_max > 1)
+					        			break;
+					        		else{
+					        			oid = (String)pair.getKey();
+					        		}
 					        }
 					        add.remove(); // avoids a ConcurrentModificationException
 					    }
+						//update only if unique
+						if(count_of_max == 1){
+							result.add(tid+','+oid+','+max);
+						}
 						
 					    return result;
 					}
