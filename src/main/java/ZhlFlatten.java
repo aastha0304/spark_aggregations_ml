@@ -30,6 +30,7 @@ public class ZhlFlatten {
 	static Logger logger = Logger.getLogger(ZhlFlatten.class.getName());
 
 	public static void main(String[] args) {
+		long startTime = System.currentTimeMillis();
 		if (args.length < 3) {
 			System.out.println("1 - modified path, 2 - original path, 3 labels");
 			System.exit(-1);
@@ -180,6 +181,9 @@ public class ZhlFlatten {
 //		System.out.println(model.weights());
 //		System.out.println("Area under ROC = " + auROC);
 		sc.stop();
+		long endTime   = System.currentTimeMillis();
+		long totalTime = endTime - startTime;
+		System.out.println(totalTime);
 	}
 }
 // to run
