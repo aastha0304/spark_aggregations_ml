@@ -82,7 +82,6 @@ public class ZhlFlatten {
 						Set<Map.Entry<String, Float>>   es = scoreMap._2.entrySet();
 						Iterator it = es.iterator();
 						if(es.size()==1){
-							
 							result.add(tid+','+((Map.Entry)it.next()).getKey()+','+'1');
 							return result;
 						}
@@ -104,16 +103,18 @@ public class ZhlFlatten {
 						int count_of_max = 0;
 						String oid = new String();
 						//finding how many have a max
+						//System.out.println("tid "+tid);
 						while (add.hasNext()) { 
 							
 					        Map.Entry pair = (Map.Entry)add.next();
 					        //result.add(tid+','+pair.getKey()+','+pair.getValue()+','+'0'); 
 					        float currentSim = (float)pair.getValue();
-					        //System.out.println(pair.getKey().toString()+','+currentSim+','+max);
-					        if(currentSim-max==0){
+					        if(currentSim==max){
 					        		count_of_max++;
-					        		if(count_of_max > 1)
+					        		if(count_of_max>1  && !((String)pair.getKey()).equals(oid))
+					        		{	
 					        			break;
+					        		}
 					        		else{
 					        			oid = (String)pair.getKey();
 					        		}
