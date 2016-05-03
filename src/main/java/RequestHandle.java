@@ -322,12 +322,12 @@ public class RequestHandle{
 			 extra.setBanner_hmin(banner_hmin);
 			 extra.setBanner_wmax(banner_wmax);
 			 extra.setBanner_wmin(banner_wmin);
-			 extra.setDevice_h(device_h);
-			 extra.setDevice_w(device_w);
-			 extra.setUser_ext_cokkie_age(user_ext_cokkie_age);
-			 extra.setUser_gender(user_gender);
-			 extra.setUser_keywords(user_keywords);
-			 extra.setUser_yob(user_yob);
+//			 extra.setDevice_h(device_h);
+//			 extra.setDevice_w(device_w);
+//			 extra.setUser_ext_cokkie_age(user_ext_cokkie_age);
+//			 extra.setUser_gender(user_gender);
+//			 extra.setUser_keywords(user_keywords);
+//			 extra.setUser_yob(user_yob);
 			 bidOb.setExtra(extra);
 		 }
 	      return bidOb;
@@ -357,10 +357,10 @@ public class RequestHandle{
 //		if(city == null || city.isEmpty())
 //			city = "";
 //		key.add(city);
-		String region = bidOb.getRegion();
-		if(region.isEmpty())
-			region="";
-		key.add(region);
+//		String region = bidOb.getRegion();
+//		if(region.isEmpty())
+//			region="";
+//		key.add(region);
 		char extra_atts = bidOb.getExtra_atts();
 		key.add(extra_atts+"");
 		return key;
