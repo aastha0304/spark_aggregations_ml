@@ -5,6 +5,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.parser.ParseException;
 import org.json.simple.parser.JSONParser;
 import org.apache.log4j.Logger;
+import org.apache.commons.lang3.StringUtils;
 
 public class RequestHandle{
 	static Logger logger = Logger.getLogger(RequestHandle.class.getName());  
@@ -137,6 +138,25 @@ public class RequestHandle{
 		}
 		return val;
 	}
+	static boolean isStandardId(String id){
+		int len = id.length();
+		if(len != 32)
+			return false;
+		String[] hyphens = id.split("-");
+		if(hyphens.length != 5)
+			return false;
+		if(hyphens[0].length() != 8)
+			return false;
+		if(hyphens[1].length()!=4)
+			return false;
+		if(hyphens[2].length()!=4)
+			return false;
+		if(hyphens[3].length()!=4)
+			return false;
+		if(hyphens[4].length()!=12)
+			return false;
+		return true;
+	}
 	static BidAttributes getCommonRow(String req){
 		ArrayList<String> app_cat = new ArrayList<>();
 		String app_domain = "";
@@ -196,7 +216,7 @@ public class RequestHandle{
 			  JSONObject user = getJson(br,  "user");
 			  if(user != null){
 				  id = getString(user, "id");
-				 
+				  
 				  badv = getArrString(br, "badv");
 				  bcat = getArrString(br, "bcat");
 				  imp_size = getJsonArr(br, "imp").size();
@@ -238,6 +258,9 @@ public class RequestHandle{
 				  }
 				  JSONObject device = getJson(br, "device");
 				  if(device != null){
+					  if(!isStandardId(id)){
+						  id = getString(device, "ifa");
+					  }
 					  ua = getString(device, "ua");
 					  ip = getString(device, "ip");
 					  device_lang = getString(device, "language");
@@ -258,6 +281,21 @@ public class RequestHandle{
 						  lon = getDouble(geo, "lon");
 						  city = getString(geo, "city");
 						  region = getString(geo, "region");
+						 if (StringUtils.isEmpty(region)){
+							 //System.out.print("region not found");
+							 //by zip
+//							 if(!StringUtils.isEmpty(zip)){
+//								 System.out.print("zip found");
+//								 region = (String)GeoHelper.zipState.get(zip);
+//								 System.out.print("region by zip is "+region);
+//							 }
+							 //by lat lon
+							 if(lat != -1){
+								 //System.out.print("coord found");
+								 region =  GeoHelper.coordState(lat, lon);
+								 //System.out.print("region by coord is "+region);
+							 }
+						 }
 						  //geo_type = getInt(geo, "type");
 					  }
 					  carrier = getString(device, "carrier");
@@ -322,19 +360,20 @@ public class RequestHandle{
 			 extra.setBanner_hmin(banner_hmin);
 			 extra.setBanner_wmax(banner_wmax);
 			 extra.setBanner_wmin(banner_wmin);
-//			 extra.setDevice_h(device_h);
-//			 extra.setDevice_w(device_w);
-//			 extra.setUser_ext_cokkie_age(user_ext_cokkie_age);
-//			 extra.setUser_gender(user_gender);
-//			 extra.setUser_keywords(user_keywords);
-//			 extra.setUser_yob(user_yob);
+			 extra.setDevice_h(device_h);
+			 extra.setDevice_w(device_w);
+			 extra.setUser_ext_cokkie_age(user_ext_cokkie_age);
+			 extra.setUser_gender(user_gender);
+			 extra.setUser_keywords(user_keywords);
+			 extra.setUser_yob(user_yob);
 			 bidOb.setExtra(extra);
 		 }
 	      return bidOb;
 	}
 	static ArrayList<String> buildKey(CommonRow bidOb){
 		ArrayList<String> key = new ArrayList<String>();
-		key.add(bidOb.getTs());
+		System.out.println(bidOb.getTs().substring(0, 15));
+		key.add(bidOb.getTs().substring(0, 15));
 		
 //		String ip = bidOb.getIp();
 //		String ip1="", ip2="", ip3 = "";
@@ -357,12 +396,20 @@ public class RequestHandle{
 //		if(city == null || city.isEmpty())
 //			city = "";
 //		key.add(city);
-//		String region = bidOb.getRegion();
-//		if(region.isEmpty())
-//			region="";
-//		key.add(region);
+		
+		String region = bidOb.getRegion();
+		 if (StringUtils.isEmpty(region)){
+			region="";
+		 }
+		key.add(region);
 		char extra_atts = bidOb.getExtra_atts();
 		key.add(extra_atts+"");
+		key.add(bidOb.getBanner_h()+"");
+		key.add(bidOb.getBanner_w()+"");
+		key.add(bidOb.getBanner_pos()+"");
+		key.add(bidOb.getBanner_topframe()+"");
+		
+		
 		return key;
 	}
 }

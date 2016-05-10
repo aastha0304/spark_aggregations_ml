@@ -5,6 +5,7 @@ import java.util.Set;
 
 import scala.Tuple2;
 import org.apache.spark.api.java.function.*;
+import org.json.simple.JSONObject;
 
 public class CommonRow extends BidAttributes implements Serializable{
 	private String ts;
@@ -70,10 +71,10 @@ public class CommonRow extends BidAttributes implements Serializable{
 class GetCommonRow implements PairFunction<String, KeyClass, CommonRow>{
 	public Tuple2<KeyClass, CommonRow> call(String s){
 		String[] line_arr = s.split("\t");
-		if(line_arr.length==3){
+		if(line_arr.length==2){
 			String ts = line_arr[0].trim();
 			String bidrequest = line_arr[1].trim();
-			double smallTs = Double.valueOf(line_arr[2].trim());
+			//double smallTs = Double.valueOf(line_arr[2].trim());
 			BidAttributes crob = RequestHandle.getCommonRow(bidrequest);
 			CommonRow bidOb = new CommonRow();
 				 bidOb.setApp_cat(crob.getApp_cat());
@@ -103,12 +104,12 @@ class GetCommonRow implements PairFunction<String, KeyClass, CommonRow>{
 				 bidOb.setIp(crob.getIp());
 				 bidOb.setInstl(crob.getInstl());
 				 bidOb.setImp_secure(crob.getImp_secure());
-				 bidOb.setId(crob.getId());
+				 bidOb.setId(crob.getId());				 
 				 bidOb.setDnt(crob.getDnt());
 				 bidOb.setExtra(crob.getExtra());
 				 bidOb.setExtra_atts(crob.getExtra_atts());
 				 bidOb.setTs(ts);
-				 bidOb.setSmallTs(smallTs);
+				 //bidOb.setSmallTs(smallTs);
 			KeyClass kOb = new KeyClass();
 			kOb.setS(RequestHandle.buildKey(bidOb));
 			return new Tuple2(kOb, bidOb)	;	

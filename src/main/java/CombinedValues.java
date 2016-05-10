@@ -136,9 +136,9 @@ public class CombinedValues {
 		this.app_cat_sim = arrSim(mr.getApp_cat(), cr.getApp_cat());
 		this.totalSim += this.app_cat_sim;
 		this.app_domain_sim = strSim(mr.getApp_domain(), cr.getApp_domain());
-		this.totalSim += this.app_domain_sim;
+		//this.totalSim += this.app_domain_sim;
 		this.app_ver_sim = appVerSim(mr.getApp_ver(), cr.getApp_ver());
-		this.totalSim += this.app_ver_sim;
+		//this.totalSim += this.app_ver_sim;
 		
 		this.badv_sim = arrSim(mr.getBadv(), cr.getBadv());
 		this.totalSim += this.badv_sim;
@@ -147,19 +147,19 @@ public class CombinedValues {
 		this.banner_battr_sim = arrSim(mr.getBanner_battr(), cr.getBanner_battr());
 		this.totalSim += this.banner_battr_sim;
 		this.banner_h_sim = typeSim(mr.getBanner_h(), cr.getBanner_h());
-		this.totalSim += this.banner_h_sim;
+		//this.totalSim += this.banner_h_sim;
 		this.banner_pos_sim = typeSim(mr.getBanner_pos(), cr.getBanner_pos());
-		this.totalSim += this.banner_pos_sim;
+		//this.totalSim += this.banner_pos_sim;
 		this.banner_topframe_sim = boolSim(mr.getBanner_topframe(), cr.getBanner_topframe());
-		this.totalSim += this.banner_topframe_sim;
+		//this.totalSim += this.banner_topframe_sim;
 		this.banner_w_sim = typeSim(mr.getBanner_w(), cr.getBanner_w());
-		this.totalSim += this.banner_w_sim;
+		//this.totalSim += this.banner_w_sim;
 		this.bcat_sim = arrSim(mr.getBcat(), cr.getBcat());
 		this.totalSim += this.bcat_sim;
-		this.bidfloor_sim = bidSim(mr.getBidfloor(), cr.getBidfloor());
+		//this.bidfloor_sim = bidSim(mr.getBidfloor(), cr.getBidfloor());
 		//this.totalSim += this.bidfloorSim;
 		
-		this.city_sim = typeStrSim(mr.getCity(), cr.getCity());
+		//this.city_sim = typeStrSim(mr.getCity(), cr.getCity());
 		this.carrier_sim = strSim(mr.getCarrier(), cr.getCarrier());
 		this.totalSim += this.carrier_sim;
 		this.connectiontype_sim = typeSim(mr.getConnectiontype(), cr.getConnectiontype());
@@ -168,19 +168,19 @@ public class CombinedValues {
 		this.device_lang_sim = typeStrSim(mr.getDevice_lang(), cr.getDevice_lang());
 		this.totalSim += this.device_lang_sim;
 		this.device_lmt_sim = boolSim(mr.getDevice_lmt(), cr.getDevice_lmt());
-		this.totalSim += this.device_lmt_sim;
+		//this.totalSim += this.device_lmt_sim;
 		this.devicetype_sim = typeSim(mr.getDevicetype(), cr.getDevicetype());
 	    this.totalSim += this.devicetype_sim;
-		this.displaymanager_sim = strSim(mr.getDisplaymanager(), cr.getDisplaymanager());
-		this.totalSim += this.displaymanager_sim;
-		this.displaymanagerver_sim = strSim(mr.getDisplaymanagerver(), cr.getDisplaymanagerver());
+		//this.displaymanager_sim = strSim(mr.getDisplaymanager(), cr.getDisplaymanager());
+		//this.totalSim += this.displaymanager_sim;
+		//this.displaymanagerver_sim = strSim(mr.getDisplaymanagerver(), cr.getDisplaymanagerver());
 		//this.totalSim += this.displaymgrverSim;
 		this.dnt_sim = boolSim(mr.getDnt(), cr.getDnt());
 		this.totalSim += this.dnt_sim;
 		
 		
 		
-		this.geo_sim = geoSim(mr.getLat(), mr.getLon(), cr.getLat(), cr.getLon());
+		//this.geo_sim = geoSim(mr.getLat(), mr.getLon(), cr.getLat(), cr.getLon());
 		//this.totalSim += this.latSim;
 		
 		this.imp_secure_sim = boolSim(mr.getImp_secure(), cr.getImp_secure());
@@ -189,19 +189,20 @@ public class CombinedValues {
 		this.totalSim += this.imp_size_sim;
 		this.instl_sim = boolSim(mr.getInstl(), cr.getInstl());
 		this.totalSim += this.instl_sim;
-		this.ip_sim = ipTypeSim(mr.getIp(), cr.getIp());
+		//this.ip_sim = ipTypeSim(mr.getIp(), cr.getIp());
 
-		this.region_sim = typeStrSim(mr.getRegion(), cr.getRegion());
+		//this.region_sim = typeStrSim(mr.getRegion(), cr.getRegion());
 		
-		this.small_ts_sim = smalltimeTypeSim(mr.getSmallTs(), cr.getSmallTs());
+		//this.small_ts_sim = smalltimeTypeSim(mr.getSmallTs(), cr.getSmallTs());
 		//this.totalSim += this.small_ts_sim;
 		
-		this.time_sim = timeTypeSim(mr.getTs(), cr.getTs());
+		//this.time_sim = timeTypeSim(mr.getTs(), cr.getTs());
+		//this.totalSim += this.time_sim;
 		 
-		this.ua_sim = strSim(mr.getUa(), cr.getUa());
+		//this.ua_sim = strSim(mr.getUa(), cr.getUa());
 		//this.totalSim += this.uaSim;
 		
-		this.zip_sim = typeStrSim(mr.getZip(), cr.getZip());
+		//this.zip_sim = typeStrSim(mr.getZip(), cr.getZip());
 		
 		this.extra_atts_sim = boolSim(mr.getExtra_atts(), cr.getExtra_atts());
 		if(this.extra_atts_sim == 1){
@@ -216,12 +217,12 @@ public class CombinedValues {
 					strSim(mr.getExtra().getUser_keywords(), cr.getExtra().getUser_keywords()) +
 					genderSim(mr.getExtra().getUser_gender(), cr.getExtra().getUser_gender());
 			this.totalSim += this.extra_sim;
-			this.totalSim = this.totalSim/31;
+			this.totalSim = this.totalSim/23;
 		}else if(this.extra_atts_sim  == 0)
-			this.totalSim = this.totalSim / 21;
+			this.totalSim = this.totalSim / 13;
 		else{
 			this.totalSim += this.extra_atts_sim;
-			this.totalSim = this.totalSim/32;
+			this.totalSim = this.totalSim/24;
 		}
 	}
 
@@ -250,15 +251,8 @@ public class CombinedValues {
 	float geoSim(float lat1, float lon1, float lat2, float lon2) {
 		//both non default, haversine
 		if (lat1 != -1 && lat2 != -1 && lon1 != -1 && lon2 != -1) {
-			double dLat = Math.toRadians(lat2 - lat1);
-			double dLon = Math.toRadians(lon2 - lon1);
-			double lat1d = Math.toRadians(lat1);
-			double lat2d = Math.toRadians(lat2);
-
-			double a = Math.pow(Math.sin(dLat / 2), 2)
-					+ Math.pow(Math.sin(dLon / 2), 2) * Math.cos(lat1d) * Math.cos(lat2d);
-			double c = 2 * Math.asin(Math.sqrt(a));
-			float distance = (float) ((float) 6372.8 * c);
+			float distance = GeoHelper.haversine(lat1, lon1, lat2, lon2);
+			
 			return (1.0f )/ (1 + distance);
 		}
 		//both default
@@ -378,17 +372,20 @@ class GetCombinedValues implements
 		for (ModifiedRow mOb : m) {
 			for (CommonRow cOb : o) {
 				CombinedValues combiOb = new CombinedValues();
-				try{
-					Date d1 = new Date((long) (mOb.getSmallTs()*1000));
-					Date d2 = new Date((long) (cOb.getSmallTs()*1000));
-					if(Math.abs( d1.getTime()- d2.getTime()) <=300){
-						combiOb.calSim(mOb, cOb);
-						results.add(new Tuple2(mOb.getO_id(), new Tuple2(cOb.getId(), combiOb.totalSim)));
-					}
-				}catch(Exception e){
-					e.printStackTrace();
-				}
-				
+				if(!StringUtils.isEmpty(cOb.getId())){
+					combiOb.calSim(mOb, cOb);
+					results.add(new Tuple2(mOb.getO_id(), new Tuple2(cOb.getId(), combiOb.totalSim)));
+	//				try{
+	//					Date d1 = new Date((long) (mOb.getSmallTs()*1000));
+	//					Date d2 = new Date((long) (cOb.getSmallTs()*1000));
+	//					if(Math.abs( d1.getTime()- d2.getTime()) <=3000){
+	//						combiOb.calSim(mOb, cOb);
+	//						results.add(new Tuple2(mOb.getO_id(), new Tuple2(cOb.getId(), combiOb.totalSim)));
+	//					}
+	//				}catch(Exception e){
+	//					e.printStackTrace();
+	//				}
+				}	
 				
 			}
 		}

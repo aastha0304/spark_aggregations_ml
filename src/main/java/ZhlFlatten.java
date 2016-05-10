@@ -42,9 +42,9 @@ public class ZhlFlatten {
 		
 		JavaSparkContext sc = new JavaSparkContext(conf);
 
-		JavaPairRDD<KeyClass, ArrayList<ModifiedRow>> mLines = sc.textFile(logMFile)
+		JavaPairRDD<KeyClass, ArrayList<ModifiedRow>> mLines = sc.textFile(logMFile, 300)
 				.mapToPair(new GetModifiedRow()).combineByKey(new InitMList(), new AddInMList(), new AddInMListPart());
-		JavaPairRDD<KeyClass, ArrayList<CommonRow>> oLines = sc.textFile(logOFile)
+		JavaPairRDD<KeyClass, ArrayList<CommonRow>> oLines = sc.textFile(logOFile, 600)
 //				.filter(new Function<String, Boolean>() {
 //					@Override
 //					public Boolean call(String s) throws Exception {
@@ -70,7 +70,10 @@ public class ZhlFlatten {
 		
 		//JavaPairRDD<String, Map<String, Float>> scoredSets = mLines.join(oLines).values().flatMapToPair(new GetCombinedValues());
 		//scoredSets.saveAsTextFile(args[3]);
-				
+		
+//		mLines.saveAsTextFile(args[2]);
+//		oLines.saveAsTextFile(args[3]);
+		mLines.join(oLines).saveAsTextFile(args[4]);
 		mLines.join(oLines).values()
 				.flatMapToPair(new GetCombinedValues())
 				.combineByKey(new InitHash(), new AddInHash(), new AddPartHash())
@@ -81,13 +84,10 @@ public class ZhlFlatten {
 						String tid = scoreMap._1;
 						Set<Map.Entry<String, Float>>   es = scoreMap._2.entrySet();
 						Iterator it = es.iterator();
-						if(es.size()==1){
-							result.add(tid+','+((Map.Entry)it.next()).getKey()+','+'1');
-							return result;
-						}
 						
 						
-						float max = 0;
+						
+						float max = .39f;
 						int idx = -1;
 						String maxKey = "";
 						int c = -1;
@@ -128,7 +128,7 @@ public class ZhlFlatten {
 						
 					    return result;
 					}
-				}).saveAsTextFile(args[2]);
+				}).saveAsTextFile(args[5]);
 		 
 		
 		
