@@ -372,7 +372,7 @@ public class RequestHandle{
 	}
 	static ArrayList<String> buildKey(CommonRow bidOb){
 		ArrayList<String> key = new ArrayList<String>();
-		System.out.println(bidOb.getTs().substring(0, 15));
+		//System.out.println(bidOb.getTs().substring(0, 15));
 		key.add(bidOb.getTs().substring(0, 15));
 		
 //		String ip = bidOb.getIp();
