@@ -34,8 +34,10 @@ public class ZhlFlatten {
 			System.out.println("1 - modified path, 2 - original path, 3 labels");
 			System.exit(-1);
 		}
-		String logMFile = args[0]; // Should be some file on your system
-		String logOFile = args[1]; // Should be some file on your system
+		String logMFile = "s3n://zhl_20160511/modified/*.log.gz"; // Should be some file on your system
+		//String logMFile = args[0]; // Should be some file on your system
+		String logOFile = "s3n://zhl_20160511/original/*.log.gz"; // Should be some file on your system
+		//String logOFile = args[1]; // Should be some file on your system
 		SparkConf conf = new SparkConf().setAppName("ZHL").set("spark.rdd.compress", "true");
 		conf.set("spark.serializer","org.apache.spark.serializer.KryoSerializer");
 		conf.set("spark.kryo.registrator","MyKryoRegistrator");
@@ -44,6 +46,7 @@ public class ZhlFlatten {
 
 		JavaPairRDD<KeyClass, ArrayList<ModifiedRow>> mLines = sc.textFile(logMFile, 300)
 				.mapToPair(new GetModifiedRow()).combineByKey(new InitMList(), new AddInMList(), new AddInMListPart());
+		System.out.println(mLines.take(10));
 		JavaPairRDD<KeyClass, ArrayList<CommonRow>> oLines = sc.textFile(logOFile, 600)
 //				.filter(new Function<String, Boolean>() {
 //					@Override
@@ -55,6 +58,7 @@ public class ZhlFlatten {
 //					}
 //				})
 				.mapToPair(new GetCommonRow()).combineByKey(new InitList(), new AddInList(), new AddInListPart());
+		System.out.println(oLines.take(10));
 
 		// JavaPairRDD<ModifiedRow, ArrayList<Tuple2<CommonRow, Float>>> cLines
 		// = mLines
@@ -71,13 +75,14 @@ public class ZhlFlatten {
 		//JavaPairRDD<String, Map<String, Float>> scoredSets = mLines.join(oLines).values().flatMapToPair(new GetCombinedValues());
 		//scoredSets.saveAsTextFile(args[3]);
 		
-		mLines.saveAsTextFile(args[2]);
-		oLines.saveAsTextFile(args[3]);
+		//mLines.saveAsTextFile(args[2]);
+		//oLines.saveAsTextFile(args[3]);
 		
 		JavaPairRDD<KeyClass, Tuple2<ArrayList<ModifiedRow>, ArrayList<CommonRow>>> joinedRDD = mLines.join(oLines);
-		mLines.unpersist();
-		oLines.unpersist();
-		joinedRDD.saveAsTextFile(args[4]);
+		//mLines.unpersist();
+		//oLines.unpersist();
+		//joinedRDD.saveAsTextFile(args[4]);
+		System.out.println(joinedRDD.take(10));
 		joinedRDD.values()
 				.flatMapToPair(new GetCombinedValues())
 				.combineByKey(new InitHash(), new AddInHash(), new AddPartHash())
@@ -91,7 +96,7 @@ public class ZhlFlatten {
 						
 						
 						
-						float max = 0.6f;
+						float max = 0.0f;
 						int idx = -1;
 						String maxKey = "";
 						int c = -1;
@@ -132,7 +137,7 @@ public class ZhlFlatten {
 						
 					    return result;
 					}
-				}).saveAsTextFile(args[5]);
+				}).saveAsTextFile(args[2]);
 		 
 		
 		
