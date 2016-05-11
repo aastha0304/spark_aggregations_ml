@@ -372,7 +372,7 @@ class GetCombinedValues implements
 		for (ModifiedRow mOb : m) {
 			for (CommonRow cOb : o) {
 				CombinedValues combiOb = new CombinedValues();
-				if(!StringUtils.isEmpty(cOb.getId())){
+				//if(!StringUtils.isEmpty(cOb.getId())){
 					combiOb.calSim(mOb, cOb);
 					results.add(new Tuple2(mOb.getO_id(), new Tuple2(cOb.getId(), combiOb.totalSim)));
 				
@@ -403,7 +403,7 @@ class GetCombinedValues implements
 	//					e.printStackTrace();
 	//				}
 					
-				}
+				//}
 			}
 		}
 		return results;

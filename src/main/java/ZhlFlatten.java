@@ -34,19 +34,41 @@ public class ZhlFlatten {
 			System.out.println("1 - modified path, 2 - original path, 3 labels");
 			System.exit(-1);
 		}
-		String logMFile = "s3n://zhl_20160511/modified/*.log.gz"; // Should be some file on your system
+		String logMFile = "file:///mnt/files/modified.log"; // Should be some file on your system
 		//String logMFile = args[0]; // Should be some file on your system
-		String logOFile = "s3n://zhl_20160511/original/*.log.gz"; // Should be some file on your system
+		String logOFile = "file:///mnt/files/original.log"; // Should be some file on your system
 		//String logOFile = args[1]; // Should be some file on your system
 		SparkConf conf = new SparkConf().setAppName("ZHL").set("spark.rdd.compress", "true");
 		conf.set("spark.serializer","org.apache.spark.serializer.KryoSerializer");
 		conf.set("spark.kryo.registrator","MyKryoRegistrator");
 		
 		JavaSparkContext sc = new JavaSparkContext(conf);
+		
+
+		System.out.println(sc.textFile(logMFile, 300).take(10));
+		
+		try {
+    Thread.sleep(3000);                 //1000 milliseconds is one second.
+} catch(InterruptedException ex) {
+    Thread.currentThread().interrupt();
+}
+
+System.out.println("1=========================");
 
 		JavaPairRDD<KeyClass, ArrayList<ModifiedRow>> mLines = sc.textFile(logMFile, 300)
 				.mapToPair(new GetModifiedRow()).combineByKey(new InitMList(), new AddInMList(), new AddInMListPart());
+
+		System.out.println("COUNT MLINES : " + mLines.count());
 		System.out.println(mLines.take(10));
+
+try {
+    Thread.sleep(3000);                 //1000 milliseconds is one second.
+} catch(InterruptedException ex) {
+    Thread.currentThread().interrupt();
+}
+
+		System.out.println("2=========================");
+		System.out.println(sc.textFile(logOFile, 600).take(10));
 		JavaPairRDD<KeyClass, ArrayList<CommonRow>> oLines = sc.textFile(logOFile, 600)
 //				.filter(new Function<String, Boolean>() {
 //					@Override
@@ -58,7 +80,22 @@ public class ZhlFlatten {
 //					}
 //				})
 				.mapToPair(new GetCommonRow()).combineByKey(new InitList(), new AddInList(), new AddInListPart());
+
+try {
+    Thread.sleep(3000);                 //1000 milliseconds is one second.
+} catch(InterruptedException ex) {
+    Thread.currentThread().interrupt();
+}
+		System.out.println("3=========================");
+		System.out.println("COUNT OLINES : " + oLines.count());
 		System.out.println(oLines.take(10));
+
+
+try {
+    Thread.sleep(3000);                 //1000 milliseconds is one second.
+} catch(InterruptedException ex) {
+    Thread.currentThread().interrupt();
+}
 
 		// JavaPairRDD<ModifiedRow, ArrayList<Tuple2<CommonRow, Float>>> cLines
 		// = mLines
@@ -82,6 +119,9 @@ public class ZhlFlatten {
 		//mLines.unpersist();
 		//oLines.unpersist();
 		//joinedRDD.saveAsTextFile(args[4]);
+		//
+		System.out.println("4==================");
+		System.out.println("COUNT JOINED LINES : " + joinedRDD.count());
 		System.out.println(joinedRDD.take(10));
 		joinedRDD.values()
 				.flatMapToPair(new GetCombinedValues())
