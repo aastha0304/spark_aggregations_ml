@@ -115,7 +115,7 @@ try {
 		//mLines.saveAsTextFile(args[2]);
 		//oLines.saveAsTextFile(args[3]);
 		
-		JavaPairRDD<KeyClass, Tuple2<ArrayList<ModifiedRow>, ArrayList<CommonRow>>> joinedRDD = mLines.join(oLines);
+		JavaPairRDD<KeyClass, Tuple2<ArrayList<ModifiedRow>, ArrayList<CommonRow>>> joinedRDD = mLines.join(oLines, 1500);
 		//mLines.unpersist();
 		//oLines.unpersist();
 		//joinedRDD.saveAsTextFile(args[4]);

@@ -140,8 +140,8 @@ public class CombinedValues {
 		//this.app_ver_sim = appVerSim(mr.getApp_ver(), cr.getApp_ver());
 		//this.totalSim += this.app_ver_sim;
 		
-		this.badv_sim = arrSim(mr.getBadv(), cr.getBadv());
-		this.totalSim += this.badv_sim;
+		//this.badv_sim = arrSim(mr.getBadv(), cr.getBadv());
+		//this.totalSim += this.badv_sim;
 		this.banner_api_sim =arrSim(mr.getBanner_api(), cr.getBanner_api());
 		this.totalSim += this.banner_api_sim;
 		this.banner_battr_sim = arrSim(mr.getBanner_battr(), cr.getBanner_battr());
@@ -217,12 +217,12 @@ public class CombinedValues {
 					strSim(mr.getExtra().getUser_keywords(), cr.getExtra().getUser_keywords()) +
 					genderSim(mr.getExtra().getUser_gender(), cr.getExtra().getUser_gender());
 			this.totalSim += this.extra_sim;
-			this.totalSim = this.totalSim/23;
+			this.totalSim = this.totalSim/22;
 		}else if(this.extra_atts_sim  == 0)
-			this.totalSim = this.totalSim / 13;
+			this.totalSim = this.totalSim / 12;
 		else{
 			this.totalSim += this.extra_atts_sim;
-			this.totalSim = this.totalSim/24;
+			this.totalSim = this.totalSim/23;
 		}
 	}
 
@@ -372,7 +372,7 @@ class GetCombinedValues implements
 		for (ModifiedRow mOb : m) {
 			for (CommonRow cOb : o) {
 				CombinedValues combiOb = new CombinedValues();
-				//if(!StringUtils.isEmpty(cOb.getId())){
+				if(!StringUtils.isEmpty(cOb.getId())){
 					combiOb.calSim(mOb, cOb);
 					results.add(new Tuple2(mOb.getO_id(), new Tuple2(cOb.getId(), combiOb.totalSim)));
 				
@@ -403,7 +403,7 @@ class GetCombinedValues implements
 	//					e.printStackTrace();
 	//				}
 					
-				//}
+				}
 			}
 		}
 		return results;
