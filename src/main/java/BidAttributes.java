@@ -2,8 +2,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 public class BidAttributes implements Serializable{
 	private ArrayList<String> app_cat;
-	private String app_domain; //
-	private String app_ver;
+	//private String app_domain; //
+	//private String app_ver;
 
 	private ArrayList<String> badv;
 	private ArrayList<Integer> banner_api;
@@ -16,14 +16,14 @@ public class BidAttributes implements Serializable{
 	private float bidfloor;
 	
 	private String carrier;
-	private String city;
+	//private String city;
 	private int connectiontype;
 	
 	private String device_lang;
-	private char device_lmt; //
+	//private char device_lmt; //
 	private int devicetype;
-	private String displaymanager;
-	private String displaymanagerver;
+	//private String displaymanager;
+	//private String displaymanagerver;
 	private char dnt;
 	
 	private char extra_atts;
@@ -32,15 +32,15 @@ public class BidAttributes implements Serializable{
 	private char imp_secure; //
 	private int imp_size;
 	private char instl;
-	private String ip;
+	//private String ip;
 	
 	private float lat;
 	private float lon;
 	
 	private String region;
-	private String ua;
+	//private String ua;
 		
-	private String zip;
+	//private String zip;
 	private ExtraAttributes extra;
 	
 
@@ -49,8 +49,8 @@ public class BidAttributes implements Serializable{
 	//private int tmax; //
 	BidAttributes(){
 		app_cat = new ArrayList<>();
-		app_domain = "";
-		app_ver = "";
+		//app_domain = "";
+		//app_ver = "";
 		
 		badv = new ArrayList<>();
 		banner_api = new ArrayList<>();
@@ -63,14 +63,14 @@ public class BidAttributes implements Serializable{
 		bidfloor = -1;
 		
 		carrier = "";
-		city = "";
+		//city = "";
 		connectiontype = -1;
 		
 		device_lang = "";
-		device_lmt = '-';
+		//device_lmt = '-';
 		devicetype = -1;
-		displaymanager = "";
-		displaymanagerver = "";
+		//displaymanager = "";
+		//displaymanagerver = "";
 		dnt = '-';
 		
 		extra_atts = '0';
@@ -79,16 +79,16 @@ public class BidAttributes implements Serializable{
 		imp_secure = '-';
 		imp_size = -1;
 		instl = '-';
-		ip = "";
+		//ip = "";
 		
-		lat = -1;
-		lon = -1;
+//		lat = -1;
+//		lon = -1;
 		
 		region = "";
 		
-		ua = "";
-		
-		zip = "";
+//		ua = "";
+//		
+//		zip = "";
 		
 		extra = new ExtraAttributes();
 		//at = -1;
@@ -100,13 +100,13 @@ public class BidAttributes implements Serializable{
 		return app_cat;
 	}
 
-	public String getApp_domain() {
-		return app_domain;
-	}
-
-	public String getApp_ver() {
-		return app_ver;
-	}
+//	public String getApp_domain() {
+//		return app_domain;
+//	}
+//
+//	public String getApp_ver() {
+//		return app_ver;
+//	}
 
 	public ArrayList<String> getBadv() {
 		return badv;
@@ -139,27 +139,27 @@ public class BidAttributes implements Serializable{
 	public String getCarrier() {
 		return carrier;
 	}
-	public String getCity() {
-		return city;
-	}
+//	public String getCity() {
+//		return city;
+//	}
 	public int getConnectiontype() {
 		return connectiontype;
 	}
 	public String getDevice_lang() {
 		return device_lang;
 	}
-	public char getDevice_lmt() {
-		return device_lmt;
-	}
+//	public char getDevice_lmt() {
+//		return device_lmt;
+//	}
 	public int getDevicetype() {
 		return devicetype;
 	}
-	public String getDisplaymanager() {
-		return displaymanager;
-	}
-	public String getDisplaymanagerver() {
-		return displaymanagerver;
-	}
+//	public String getDisplaymanager() {
+//		return displaymanager;
+//	}
+//	public String getDisplaymanagerver() {
+//		return displaymanagerver;
+//	}
 	public char getDnt() {
 		return dnt;
 	}
@@ -184,9 +184,9 @@ public class BidAttributes implements Serializable{
 	public char getInstl() {
 		return instl;
 	}
-	public String getIp() {
-		return ip;
-	}
+//	public String getIp() {
+//		return ip;
+//	}
 	public float getLat() {
 		return lat;
 	}
@@ -196,21 +196,21 @@ public class BidAttributes implements Serializable{
 	public String getRegion() {
 		return region;
 	}
-	public String getUa() {
-		return ua;
-	}
-	public String getZip() {
-		return zip;
-	}
+//	public String getUa() {
+//		return ua;
+//	}
+//	public String getZip() {
+//		return zip;
+//	}
 	public void setApp_cat(ArrayList<String> app_cat) {
 		this.app_cat = app_cat;
 	}
-	public void setApp_domain(String app_domain) {
-		this.app_domain = app_domain;
-	}
-	public void setApp_ver(String app_ver) {
-		this.app_ver = app_ver;
-	}
+//	public void setApp_domain(String app_domain) {
+//		this.app_domain = app_domain;
+//	}
+//	public void setApp_ver(String app_ver) {
+//		this.app_ver = app_ver;
+//	}
 	public void setBadv(ArrayList<String> badv) {
 		this.badv = badv;
 	}
@@ -241,27 +241,27 @@ public class BidAttributes implements Serializable{
 	public void setCarrier(String carrier) {
 		this.carrier = carrier;
 	}
-	public void setCity(String city) {
-		this.city = city;
-	}
+//	public void setCity(String city) {
+//		this.city = city;
+//	}
 	public void setConnectiontype(int connectiontype) {
 		this.connectiontype = connectiontype;
 	}
 	public void setDevice_lang(String device_lang) {
 		this.device_lang = device_lang;
 	}
-	public void setDevice_lmt(char device_lmt) {
-		this.device_lmt = device_lmt;
-	}
+//	public void setDevice_lmt(char device_lmt) {
+//		this.device_lmt = device_lmt;
+//	}
 	public void setDevicetype(int devicetype) {
 		this.devicetype = devicetype;
 	}
-	public void setDisplaymanager(String displaymanager) {
-		this.displaymanager = displaymanager;
-	}
-	public void setDisplaymanagerver(String displaymanagerver) {
-		this.displaymanagerver = displaymanagerver;
-	}
+//	public void setDisplaymanager(String displaymanager) {
+//		this.displaymanager = displaymanager;
+//	}
+//	public void setDisplaymanagerver(String displaymanagerver) {
+//		this.displaymanagerver = displaymanagerver;
+//	}
 	public void setDnt(char dnt) {
 		this.dnt = dnt;
 	}
@@ -283,9 +283,9 @@ public class BidAttributes implements Serializable{
 	public void setInstl(char instl) {
 		this.instl = instl;
 	}
-	public void setIp(String ip) {
-		this.ip = ip;
-	}
+//	public void setIp(String ip) {
+//		this.ip = ip;
+//	}
 	public void setLat(float lat) {
 		this.lat = lat;
 	}
@@ -295,13 +295,13 @@ public class BidAttributes implements Serializable{
 	public void setRegion(String region) {
 		this.region = region;
 	}
-	public void setUa(String ua) {
-		this.ua = ua;
-	}
-	
-	public void setZip(String zip) {
-		this.zip = zip;
-	}
+//	public void setUa(String ua) {
+//		this.ua = ua;
+//	}
+//	
+//	public void setZip(String zip) {
+//		this.zip = zip;
+//	}
 }
 class ExtraAttributes implements Serializable{
 	private int banner_hmax;

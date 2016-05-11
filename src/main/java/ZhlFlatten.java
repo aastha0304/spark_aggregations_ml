@@ -87,7 +87,7 @@ public class ZhlFlatten {
 						
 						
 						
-						float max = 0.4f;
+						float max = 0.5f;
 						int idx = -1;
 						String maxKey = "";
 						int c = -1;

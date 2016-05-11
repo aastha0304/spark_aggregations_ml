@@ -135,9 +135,9 @@ public class CombinedValues {
 	void calSim(ModifiedRow mr, CommonRow cr) {
 		this.app_cat_sim = arrSim(mr.getApp_cat(), cr.getApp_cat());
 		this.totalSim += this.app_cat_sim;
-		this.app_domain_sim = strSim(mr.getApp_domain(), cr.getApp_domain());
+		//this.app_domain_sim = strSim(mr.getApp_domain(), cr.getApp_domain());
 		//this.totalSim += this.app_domain_sim;
-		this.app_ver_sim = appVerSim(mr.getApp_ver(), cr.getApp_ver());
+		//this.app_ver_sim = appVerSim(mr.getApp_ver(), cr.getApp_ver());
 		//this.totalSim += this.app_ver_sim;
 		
 		this.badv_sim = arrSim(mr.getBadv(), cr.getBadv());
@@ -167,7 +167,7 @@ public class CombinedValues {
 		
 		this.device_lang_sim = typeStrSim(mr.getDevice_lang(), cr.getDevice_lang());
 		this.totalSim += this.device_lang_sim;
-		this.device_lmt_sim = boolSim(mr.getDevice_lmt(), cr.getDevice_lmt());
+		//this.device_lmt_sim = boolSim(mr.getDevice_lmt(), cr.getDevice_lmt());
 		//this.totalSim += this.device_lmt_sim;
 		this.devicetype_sim = typeSim(mr.getDevicetype(), cr.getDevicetype());
 	    this.totalSim += this.devicetype_sim;
@@ -373,6 +373,9 @@ class GetCombinedValues implements
 			for (CommonRow cOb : o) {
 				CombinedValues combiOb = new CombinedValues();
 				if(!StringUtils.isEmpty(cOb.getId())){
+					//combiOb.calSim(mOb, cOb);
+					//results.add(new Tuple2(mOb.getO_id(), new Tuple2(cOb.getId(), combiOb.totalSim)));
+				
 					SimpleDateFormat format = new SimpleDateFormat("yyyy-mm-dd HH:mm:ss");
 					Date d1 = null;
 					Date d2 = null;
@@ -381,7 +384,7 @@ class GetCombinedValues implements
 						d2 = format.parse(cOb.getTs());
 						float diff = d2.getTime() - d1.getTime();
 						float diffSeconds = diff / 1000 % 60;
-						if(diffSeconds <= 180){
+						if(diffSeconds <= 120){
 							combiOb.calSim(mOb, cOb);
 							results.add(new Tuple2(mOb.getO_id(), new Tuple2(cOb.getId(), combiOb.totalSim)));
 						}
@@ -399,8 +402,8 @@ class GetCombinedValues implements
 	//				}catch(Exception e){
 	//					e.printStackTrace();
 	//				}
-				}	
-				
+					
+				}
 			}
 		}
 		return results;

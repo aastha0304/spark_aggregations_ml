@@ -223,7 +223,7 @@ public class RequestHandle{
 				  JSONObject imp = (JSONObject)getJsonArr(br, "imp").get(0);
 				  if(imp != null){
 					  bidfloor = getDouble(imp, "bidfloor");
-					  displaymanager = getString(imp, "displaymanager");
+					 // displaymanager = getString(imp, "displaymanager");
 					  instl = (char)(getInt(imp, "instl")+'0');
 					  imp_secure = (char)(getInt(imp, "secure")+'0');
 					  JSONObject banner = getJson(imp, "banner");
@@ -252,19 +252,19 @@ public class RequestHandle{
 				  }
 				  JSONObject app = getJson(br, "app");
 				  if(app != null){
-					  app_ver = getString(app, "ver");
+					  //app_ver = getString(app, "ver");
 					  app_cat = getArrString(app, "cat");
-					  app_domain = getString(app, "domain");
+					  //app_domain = getString(app, "domain");
 				  }
 				  JSONObject device = getJson(br, "device");
 				  if(device != null){
 					  if(!isStandardId(id)){
 						  id = getString(device, "ifa");
 					  }
-					  ua = getString(device, "ua");
-					  ip = getString(device, "ip");
+					  //ua = getString(device, "ua");
+					  //ip = getString(device, "ip");
 					  device_lang = getString(device, "language");
-					  device_lmt = (char)(getInt(device, "lmt")+'0');
+					 // device_lmt = (char)(getInt(device, "lmt")+'0');
 					  //for extra_atts
 					  device_h = getInt(device, "h");
 					  if(device_h!=-1){
@@ -276,10 +276,10 @@ public class RequestHandle{
 					  }
 					  JSONObject geo = getJson(device, "geo");
 					  if(geo != null){
-						  zip = getString(geo, "zip");
+						  //zip = getString(geo, "zip");
 						  lat = getDouble(geo, "lat");
 						  lon = getDouble(geo, "lon");
-						  city = getString(geo, "city");
+						 // city = getString(geo, "city");
 						  region = getString(geo, "region");
 						 if (StringUtils.isEmpty(region)){
 							 //System.out.print("region not found");
@@ -326,8 +326,8 @@ public class RequestHandle{
 	      
 		 BidAttributes bidOb = new BidAttributes();
 		 bidOb.setApp_cat(app_cat);
-		 bidOb.setApp_domain(app_domain);
-		 bidOb.setApp_ver(app_ver);
+//		 bidOb.setApp_domain(app_domain);
+//		 bidOb.setApp_ver(app_ver);
 		 bidOb.setBadv(badv);
 		 bidOb.setBanner_api(banner_api);
 		 bidOb.setBanner_battr(banner_battr);
@@ -338,18 +338,18 @@ public class RequestHandle{
 		 bidOb.setBcat(bcat);
 		 bidOb.setBidfloor(bidfloor);
 		 bidOb.setCarrier(carrier);
-		 bidOb.setCity(city);
+//		 bidOb.setCity(city);
 		 bidOb.setConnectiontype(connectiontype);
 		 bidOb.setDevice_lang(device_lang);
-		 bidOb.setDevice_lmt(device_lmt);
+//		 bidOb.setDevice_lmt(device_lmt);
 		 bidOb.setDevicetype(devicetype);
-		 bidOb.setDisplaymanager(displaymanager);
-		 bidOb.setDisplaymanagerver(displaymanagerver);
-		 bidOb.setUa(ua);
+//		 bidOb.setDisplaymanager(displaymanager);
+//		 bidOb.setDisplaymanagerver(displaymanagerver);
+//		 bidOb.setUa(ua);
 		 bidOb.setRegion(region);
 		 bidOb.setLon(lon);
 		 bidOb.setLat(lat);
-		 bidOb.setIp(ip);
+//		 bidOb.setIp(ip);
 		 bidOb.setInstl(instl);
 		 bidOb.setImp_secure(imp_secure);
 		 bidOb.setId(id);

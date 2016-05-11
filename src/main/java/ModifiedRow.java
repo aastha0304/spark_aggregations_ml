@@ -15,24 +15,22 @@ public class ModifiedRow extends CommonRow implements Serializable{
     public void setO_id(String o_id) {
 		this.o_id = o_id;
 	}
+	@Override
 	public String toString(){
 		StringBuffer sbf = new StringBuffer();
 		sbf.append(this.getId()).append('\t').append(this.getBadv()).append('\t').append(this.getBcat()).append('\t')
-		.append(this.getDisplaymanager()).append('\t').append(this.getBanner_api()).append('\t')
+		.append(this.getBanner_api()).append('\t')
 		.append(this.getBanner_battr())
-		.append('\t').append(this.getDisplaymanagerver()).append('\t').append(this.getApp_ver()).append('\t')
-		.append(this.getApp_cat())
-		.append('\t').append(this.getUa()).append('\t').append(this.getIp())
-		.append('\t').append(this.getCity()).append('\t').append(this.getRegion()).append('\t').append(this.getCarrier())
-		.append('\t').append(this.getApp_domain())
-		.append('\t').append(this.getDevice_lang()).append('\t').append(this.getBidfloor()).append('\t')
+		.append('\t')
+		.append(this.getApp_cat()).append('\t').append(this.getRegion()).append('\t').append(this.getCarrier())
+		.append('\t')
+		.append(this.getDevice_lang()).append('\t').append(this.getBidfloor()).append('\t')
 		.append(this.getLat())
 		.append('\t').append(this.getLon()).append('\t').append(this.getInstl())
 		.append('\t').append(this.getBanner_pos()).append('\t').append(this.getBanner_w()).append('\t')
 		.append(this.getBanner_h())
 		.append('\t').append(this.getConnectiontype())
-		.append('\t').append(this.getDevicetype()).append('\t').append(this.getDnt()).append('\t')
-		.append(this.getDevice_lmt())
+		.append('\t').append(this.getDevicetype()).append('\t').append(this.getDnt())
 		.append('\t').append(this.getImp_secure()).append('\t')
 		.append(this.getBanner_topframe()).append('\t').append(this.getTs()).append('\t').append(this.getO_id());
 		return sbf.toString();
@@ -67,8 +65,8 @@ class GetModifiedRow implements PairFunction<String, KeyClass, ModifiedRow> {
 			  BidAttributes crob = RequestHandle.getCommonRow(bidrequest);
 		  	  ModifiedRow bidOb = new ModifiedRow();
 				 bidOb.setApp_cat(crob.getApp_cat());
-				 bidOb.setApp_domain(crob.getApp_domain());
-				 bidOb.setApp_ver(crob.getApp_ver());
+//				 bidOb.setApp_domain(crob.getApp_domain());
+//				 bidOb.setApp_ver(crob.getApp_ver());
 				 bidOb.setBadv(crob.getBadv());
 				 bidOb.setBanner_api(crob.getBanner_api());
 				 bidOb.setBanner_battr(crob.getBanner_battr());
@@ -80,18 +78,18 @@ class GetModifiedRow implements PairFunction<String, KeyClass, ModifiedRow> {
 				 bidOb.setBcat(crob.getBcat());
 				 bidOb.setBidfloor(crob.getBidfloor());
 				 bidOb.setCarrier(crob.getCarrier());
-				 bidOb.setCity(crob.getCity());
+//				 bidOb.setCity(crob.getCity());
 				 bidOb.setConnectiontype(crob.getConnectiontype());
 				 bidOb.setDevice_lang(crob.getDevice_lang());
-				 bidOb.setDevice_lmt(crob.getDevice_lmt());
+//				 bidOb.setDevice_lmt(crob.getDevice_lmt());
 				 bidOb.setDevicetype(crob.getDevicetype());
-				 bidOb.setDisplaymanager(crob.getDisplaymanager());
-				 bidOb.setDisplaymanagerver(crob.getDisplaymanagerver());
-				 bidOb.setUa(crob.getUa());
+//				 bidOb.setDisplaymanager(crob.getDisplaymanager());
+//				 bidOb.setDisplaymanagerver(crob.getDisplaymanagerver());
+//				 bidOb.setUa(crob.getUa());
 				 bidOb.setRegion(crob.getRegion());
 				 bidOb.setLon(crob.getLon());
 				 bidOb.setLat(crob.getLat());
-				 bidOb.setIp(crob.getIp());
+//				 bidOb.setIp(crob.getIp());
 				 bidOb.setInstl(crob.getInstl());
 				 bidOb.setImp_secure(crob.getImp_secure());
 				 bidOb.setId(crob.getId());
