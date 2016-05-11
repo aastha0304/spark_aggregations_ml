@@ -136,7 +136,7 @@ try {
 						
 						
 						
-						float max = 0.0f;
+						float max = 0.59f;
 						int idx = -1;
 						String maxKey = "";
 						int c = -1;
