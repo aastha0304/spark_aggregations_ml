@@ -71,10 +71,14 @@ public class ZhlFlatten {
 		//JavaPairRDD<String, Map<String, Float>> scoredSets = mLines.join(oLines).values().flatMapToPair(new GetCombinedValues());
 		//scoredSets.saveAsTextFile(args[3]);
 		
-//		mLines.saveAsTextFile(args[2]);
-//		oLines.saveAsTextFile(args[3]);
-		mLines.join(oLines).saveAsTextFile(args[4]);
-		mLines.join(oLines).values()
+		mLines.saveAsTextFile(args[2]);
+		oLines.saveAsTextFile(args[3]);
+		
+		JavaPairRDD<KeyClass, Tuple2<ArrayList<ModifiedRow>, ArrayList<CommonRow>>> joinedRDD = mLines.join(oLines);
+		mLines.unpersist();
+		oLines.unpersist();
+		joinedRDD.saveAsTextFile(args[4]);
+		joinedRDD.values()
 				.flatMapToPair(new GetCombinedValues())
 				.combineByKey(new InitHash(), new AddInHash(), new AddPartHash())
 			    .flatMap(new FlatMapFunction<Tuple2<String, Map<String, Float>>, String>() {
@@ -87,7 +91,7 @@ public class ZhlFlatten {
 						
 						
 						
-						float max = 0.5f;
+						float max = 0.6f;
 						int idx = -1;
 						String maxKey = "";
 						int c = -1;

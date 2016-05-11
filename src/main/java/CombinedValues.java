@@ -373,24 +373,24 @@ class GetCombinedValues implements
 			for (CommonRow cOb : o) {
 				CombinedValues combiOb = new CombinedValues();
 				if(!StringUtils.isEmpty(cOb.getId())){
-					//combiOb.calSim(mOb, cOb);
-					//results.add(new Tuple2(mOb.getO_id(), new Tuple2(cOb.getId(), combiOb.totalSim)));
+					combiOb.calSim(mOb, cOb);
+					results.add(new Tuple2(mOb.getO_id(), new Tuple2(cOb.getId(), combiOb.totalSim)));
 				
-					SimpleDateFormat format = new SimpleDateFormat("yyyy-mm-dd HH:mm:ss");
-					Date d1 = null;
-					Date d2 = null;
-					try {
-						d1 = format.parse(mOb.getTs());
-						d2 = format.parse(cOb.getTs());
-						float diff = d2.getTime() - d1.getTime();
-						float diffSeconds = diff / 1000 % 60;
-						if(diffSeconds <= 120){
-							combiOb.calSim(mOb, cOb);
-							results.add(new Tuple2(mOb.getO_id(), new Tuple2(cOb.getId(), combiOb.totalSim)));
-						}
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
+//					SimpleDateFormat format = new SimpleDateFormat("yyyy-mm-dd HH:mm:ss");
+//					Date d1 = null;
+//					Date d2 = null;
+//					try {
+//						d1 = format.parse(mOb.getTs());
+//						d2 = format.parse(cOb.getTs());
+//						float diff = d2.getTime() - d1.getTime();
+//						float diffSeconds = diff / 1000 % 60;
+//						if(diffSeconds <= 120){
+//							combiOb.calSim(mOb, cOb);
+//							results.add(new Tuple2(mOb.getO_id(), new Tuple2(cOb.getId(), combiOb.totalSim)));
+//						}
+//					} catch (Exception e) {
+//						e.printStackTrace();
+//					}
 					
 	//				try{
 	//					Date d1 = new Date((long) (mOb.getSmallTs()*1000));
